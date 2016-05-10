@@ -1,0 +1,66 @@
+﻿@model PagedList.IPagedList<SalmonRiver.Date>
+@using PagedList;
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+
+</style>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Date
+        </th>
+        <th>
+            Checkin Time
+        </th>
+        <th>
+            Checkout Time
+        </th>
+        <th>
+            Holiday
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr class="@(item.IsActive ? "success" : "danger")">
+        <td>
+            @item.Date1.ToString("ddd, MMM d, yyyy")
+        </td>
+        <td>
+            @item.CheckIn.ToString("h:mm tt")
+        </td>
+        <td>
+            @item.CheckOut.ToString("h:mm tt")
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Holiday.Holiday1)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.DateID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.DateID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.DateID })
+        </td>
+    </tr>
+}
+
+</table>
+
+<br />
+Active dates will appear in green, inactive dates will appear in red.
+<br />
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount.
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
