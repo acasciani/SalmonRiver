@@ -3,19 +3,78 @@
 @using PagedList.Mvc;
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-<style type="text/css">
 
-</style>
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            $('#startDateRange').datetimepicker({
+                format: 'MM/DD/YYYY'
+            });
+            $('#endDateRange').datetimepicker({
+                format: 'MM/DD/YYYY',
+                useCurrent: false
+            });
+            $("#startDateRange").on("dp.change", function (e) {
+                $('#endDateRange').data("DateTimePicker").minDate(e.date);
+            });
+            $("#endDateRange").on("dp.change", function (e) {
+                $('#startDateRange').data("DateTimePicker").maxDate(e.date);
+            });
+        });
+    </script>
+}
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Date Registration Administration</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<div class="well">
+@using (Html.BeginForm("Index", "Dates", new { }, FormMethod.Get))
+{
+    <div class="form-group">
+        <div class="checkbox">
+            <label>
+                @Html.CheckBox("showPast", Request.QueryString["showPast"] == "true") Show Dates in the Past
+            </label>
+        </div>
+    </div>
+
+    @Html.Hidden("page", Model.PageNumber);
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-xs-12">
+                <label>Date Range Filter</label>
+            </div>
+
+            <div class="col-sm-5">
+                <div class="input-group" id="startDateRange">
+                    <input type="text" class="form-control" name="startDate" placeholder="Start date range" value="@Request.QueryString["startDate"]">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-sm-5">
+                <div class="input-group" id="endDateRange">
+                    <input type="text" class="form-control" name="endDate" placeholder="End date range" value="@Request.QueryString["endDate"]">
+                    <span class="input-group-addon">
+                        t
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+        <button type="submit" class="btn btn-default">Apply Date Filter</button>
+}
+
+</div>
+
 <table class="table">
     <tr>
         <th>
@@ -47,10 +106,10 @@
         <td>
             @Html.DisplayFor(modelItem => item.Holiday.Holiday1)
         </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.DateID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.DateID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.DateID })
+        <td align="right">
+            <a href="@Url.Action("Edit",  new { id = item.DateID })" title="Edit">
+                <span class="glyphicon glyphicon-edit"></span>
+            </a>
         </td>
     </tr>
 }
