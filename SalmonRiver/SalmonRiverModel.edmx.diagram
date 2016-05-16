@@ -5,9 +5,11 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="a0a1298b917740b5b0af4afe3dc4ce3f" Name="Diagram1">
-        <EntityTypeShape EntityType="SalmonRiverModel.Date" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="SalmonRiverModel.Holiday" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
-        <AssociationConnector Association="SalmonRiverModel.FK_Dates_Holidays" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="SalmonRiverModel.Date" Width="1.5" PointX="3" PointY="1" />
+        <EntityTypeShape EntityType="SalmonRiverModel.Holiday" Width="1.5" PointX="0.75" PointY="1.375" />
+        <AssociationConnector Association="SalmonRiverModel.FK_Dates_Holidays" />
+        <EntityTypeShape EntityType="SalmonRiverModel.Hold" Width="1.5" PointX="8.25" PointY="1.5" />
+        <AssociationConnector Association="SalmonRiverModel.FK_Holds_Dates" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

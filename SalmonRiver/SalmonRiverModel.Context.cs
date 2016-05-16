@@ -27,5 +27,6 @@ namespace SalmonRiver
     
         public virtual DbSet<Date> Dates { get; set; }
         public virtual DbSet<Holiday> Holidays { get; set; }
+        public virtual DbSet<Hold> Holds { get; set; }
     }
 }

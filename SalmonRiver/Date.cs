@@ -14,6 +14,12 @@ namespace SalmonRiver
     
     public partial class Date
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Date()
+        {
+            this.Holds = new HashSet<Hold>();
+        }
+    
         public int DateID { get; set; }
         public System.DateTime Date1 { get; set; }
         public Nullable<int> HolidayID { get; set; }
@@ -22,5 +28,7 @@ namespace SalmonRiver
         public bool IsActive { get; set; }
     
         public virtual Holiday Holiday { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Hold> Holds { get; set; }
     }
 }

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SalmonRiverModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SalmonRiverModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Dates">
           <Key>
             <PropertyRef Name="DateID" />
@@ -23,6 +23,14 @@
           <Property Name="HolidayID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Holiday" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
+        <EntityType Name="Holds">
+          <Key>
+            <PropertyRef Name="HoldID" />
+          </Key>
+          <Property Name="HoldID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DateID" Type="int" Nullable="false" />
+          <Property Name="Expiration" Type="datetime" Nullable="false" />
+        </EntityType>
         <Association Name="FK_Dates_Holidays">
           <End Role="Holidays" Type="Self.Holidays" Multiplicity="0..1" />
           <End Role="Dates" Type="Self.Dates" Multiplicity="*" />
@@ -35,19 +43,48 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Holds_Dates">
+          <End Role="Dates" Type="Self.Dates" Multiplicity="1" />
+          <End Role="Holds" Type="Self.Holds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dates">
+              <PropertyRef Name="DateID" />
+            </Principal>
+            <Dependent Role="Holds">
+              <PropertyRef Name="DateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="SalmonRiverModelStoreContainer">
-          <EntitySet Name="Dates" EntityType="Self.Dates" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Holidays" EntityType="Self.Holidays" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dates" EntityType="Self.Dates" Schema="headwaters" store:Type="Tables" />
+          <EntitySet Name="Holidays" EntityType="Self.Holidays" Schema="headwaters" store:Type="Tables" />
+          <EntitySet Name="Holds" EntityType="Self.Holds" Schema="www_headwaters" store:Type="Tables" />
           <AssociationSet Name="FK_Dates_Holidays" Association="Self.FK_Dates_Holidays">
             <End Role="Holidays" EntitySet="Holidays" />
             <End Role="Dates" EntitySet="Dates" />
           </AssociationSet>
+          <AssociationSet Name="FK_Holds_Dates" Association="Self.FK_Holds_Dates">
+            <End Role="Dates" EntitySet="Dates" />
+            <End Role="Holds" EntitySet="Holds" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SalmonRiverModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="SalmonRiverEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Dates" EntityType="SalmonRiverModel.Date" />
+          <EntitySet Name="Holidays" EntityType="SalmonRiverModel.Holiday" />
+          <AssociationSet Name="FK_Dates_Holidays" Association="SalmonRiverModel.FK_Dates_Holidays">
+            <End Role="Holiday" EntitySet="Holidays" />
+            <End Role="Date" EntitySet="Dates" />
+          </AssociationSet>
+          <EntitySet Name="Holds" EntityType="SalmonRiverModel.Hold" />
+          <AssociationSet Name="FK_Holds_Dates" Association="SalmonRiverModel.FK_Holds_Dates">
+            <End Role="Date" EntitySet="Dates" />
+            <End Role="Hold" EntitySet="Holds" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Date">
           <Key>
             <PropertyRef Name="DateID" />
@@ -58,36 +95,50 @@
           <Property Name="CheckIn" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CheckOut" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Holiday" Relationship="Self.FK_Dates_Holidays" FromRole="Dates" ToRole="Holidays" />
+          <NavigationProperty Name="Holiday" Relationship="SalmonRiverModel.FK_Dates_Holidays" FromRole="Date" ToRole="Holiday" />
+          <NavigationProperty Name="Holds" Relationship="SalmonRiverModel.FK_Holds_Dates" FromRole="Date" ToRole="Hold" />
         </EntityType>
         <EntityType Name="Holiday">
           <Key>
             <PropertyRef Name="HolidayID" />
           </Key>
           <Property Name="HolidayID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Holiday1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Dates" Relationship="Self.FK_Dates_Holidays" FromRole="Holidays" ToRole="Dates" />
+          <Property Name="Holiday1" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Dates" Relationship="SalmonRiverModel.FK_Dates_Holidays" FromRole="Holiday" ToRole="Date" />
         </EntityType>
         <Association Name="FK_Dates_Holidays">
-          <End Role="Holidays" Type="Self.Holiday" Multiplicity="0..1" />
-          <End Role="Dates" Type="Self.Date" Multiplicity="*" />
+          <End Type="SalmonRiverModel.Holiday" Role="Holiday" Multiplicity="0..1" />
+          <End Type="SalmonRiverModel.Date" Role="Date" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Holidays">
+            <Principal Role="Holiday">
               <PropertyRef Name="HolidayID" />
             </Principal>
-            <Dependent Role="Dates">
+            <Dependent Role="Date">
               <PropertyRef Name="HolidayID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="SalmonRiverEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Dates" EntityType="Self.Date" />
-          <EntitySet Name="Holidays" EntityType="Self.Holiday" />
-          <AssociationSet Name="FK_Dates_Holidays" Association="Self.FK_Dates_Holidays">
-            <End Role="Holidays" EntitySet="Holidays" />
-            <End Role="Dates" EntitySet="Dates" />
-          </AssociationSet>
-        </EntityContainer>
+        <EntityType Name="Hold">
+          <Key>
+            <PropertyRef Name="HoldID" />
+          </Key>
+          <Property Name="HoldID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateID" Type="Int32" Nullable="false" />
+          <Property Name="Expiration" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Date" Relationship="SalmonRiverModel.FK_Holds_Dates" FromRole="Hold" ToRole="Date" />
+        </EntityType>
+        <Association Name="FK_Holds_Dates">
+          <End Type="SalmonRiverModel.Date" Role="Date" Multiplicity="1" />
+          <End Type="SalmonRiverModel.Hold" Role="Hold" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Date">
+              <PropertyRef Name="DateID" />
+            </Principal>
+            <Dependent Role="Hold">
+              <PropertyRef Name="DateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -97,20 +148,29 @@
           <EntitySetMapping Name="Dates">
             <EntityTypeMapping TypeName="SalmonRiverModel.Date">
               <MappingFragment StoreEntitySet="Dates">
-                <ScalarProperty Name="DateID" ColumnName="DateID" />
-                <ScalarProperty Name="Date1" ColumnName="Date" />
-                <ScalarProperty Name="HolidayID" ColumnName="HolidayID" />
-                <ScalarProperty Name="CheckIn" ColumnName="CheckIn" />
-                <ScalarProperty Name="CheckOut" ColumnName="CheckOut" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CheckOut" ColumnName="CheckOut" />
+                <ScalarProperty Name="CheckIn" ColumnName="CheckIn" />
+                <ScalarProperty Name="HolidayID" ColumnName="HolidayID" />
+                <ScalarProperty Name="Date1" ColumnName="Date" />
+                <ScalarProperty Name="DateID" ColumnName="DateID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Holidays">
             <EntityTypeMapping TypeName="SalmonRiverModel.Holiday">
               <MappingFragment StoreEntitySet="Holidays">
-                <ScalarProperty Name="HolidayID" ColumnName="HolidayID" />
                 <ScalarProperty Name="Holiday1" ColumnName="Holiday" />
+                <ScalarProperty Name="HolidayID" ColumnName="HolidayID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Holds">
+            <EntityTypeMapping TypeName="SalmonRiverModel.Hold">
+              <MappingFragment StoreEntitySet="Holds">
+                <ScalarProperty Name="Expiration" ColumnName="Expiration" />
+                <ScalarProperty Name="DateID" ColumnName="DateID" />
+                <ScalarProperty Name="HoldID" ColumnName="HoldID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
