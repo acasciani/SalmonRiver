@@ -1,31 +1,184 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Welcome!";
+    ViewBag.HasHeaderCarousel = true;
+    ViewBag.ActiveHeader = "Home";
+
+    string errorMessage;
+
+    switch ((Errors?)ViewBag.ErrorCode)
+    {
+        case Errors.BookNow_InvalidStartOrEndDate: errorMessage = "Please select a valid start and end from the available dates."; break;
+        case Errors.BookNow_SelectedDatesOnHold: errorMessage = "One or more of the dates you selected are unavailable at the moment. Please try again a little later."; break;
+        case Errors.BookNow_SomeDatesUnavailable: errorMessage = "Some of the dates you selected are no longer available."; break;
+        default: errorMessage = null; break;
+    }
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+@section scripts {
+    <script src="/Scripts/custom/HeaderNavBar.js"></script>
+}
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+@using(Html.BeginForm("Index", "Reserve", FormMethod.Post))
+{ 
+    @model SalmonRiver.Models.BookNowViewModel
+<div class="booknow">
+    <div class="container">
+        <h3><label>Book Your Reservation Now</label></h3>
+
+        <div class="row">
+            @if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                <div class="col-sm-12">
+                    <p class="text-danger" style="font-weight: bold;">
+                        @errorMessage
+                    </p>
+                </div>
+            }
+
+            <div class="col-sm-12">
+                <div class="form-horizontal">
+
+                    <div class='col-xs-5 col-sm-3'>
+                        <div class="form-group">
+                            <div class='input-group date' id='datetimepicker6'>
+                                @Html.TextBoxFor(i=> i.Start, new { @class = "form-control", placeholder="Start" })
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <label class="control-label col-xs-2 col-sm-1" style="text-align: center">to</label>
+                    <div class='col-xs-5 col-sm-3'>
+                        <div class="form-group">
+                            <div class='input-group date' id='datetimepicker7'>
+                                @Html.TextBoxFor(i => i.End, new { @class = "form-control", placeholder = "Start" })
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-xs-5 col-sm-offset-1">
+                        <div class="form-group">
+                            @Html.DropDownListFor(i => i.Guests, new List<SelectListItem>() { new SelectListItem() { Text = "1-4 guests", Value = "4" }, new SelectListItem() { Text = "5-6 guests", Value = "6" } }, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2 col-xs-7" style="text-align: right">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Book&nbsp;&nbsp;&#10097;&#10097;</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+</div>
+}
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-sm-8">
+            <h1>Headwaters Cabins at the Salmon River</h1>
+            <p>Just steps from the headwaters of the Salmon River enjoy your stay in this new cabin that sleeps 4-6 and is fully equipped with all amenities. All amenities include new kitchen appliance, TV, bath and a half and gas stove for those chilly nights. The snowmobile trail is just around the corner and fishing access to the Salmon River is across the road at the headwaters.</p>
+            <p>This area has it all. Fishing, snowmobiling, hiking, ATV, skiing or just a place to relax and enjoy nature. Located just outside the village of Altmar, New York this cabin is in the heart of Salomon fishing for the expert or the novice!</p>
+            <p>And while you are here visit the Salmon River Fish Hatchery, the state’s largest hatchery, maintained by the Department of Environmental Conservation just down the road!</p>
+        </div>
+
+        <div class="col-sm-4 hidden-xs" style="margin-top:20px;">
+            <img src="~/Content/images/twitter-example.png" width="100%" />
+        </div>
+
     </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+
+    <div class="row">
+
+
+        <div class="col-sm-4">
+            <a href="#">
+                <div class="panel panel-default book-now" style="margin-top: 20px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+                    <div class="panel-heading" style="background-image: url(/Content/images/SalmonRiverFishHatchery.jpg); background-repeat: no-repeat; background-size: contain;background-position: center bottom; ">
+                        <img src="/Content/images/SalmonRiverFishHatchery.jpg" style="visibility: hidden;" width="100%" />
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left"><strong>Salmon River Fish Hatchery</strong></div>
+                        <div class="pull-right"><span class="glyphicon glyphicon-circle-arrow-right"></span></div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-4">
+            <a href="#">
+                <div class="panel panel-default book-now" style="margin-top: 20px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+                    <div class="panel-heading" style="background-image: url(/Content/images/snowmobiling.jpg); background-repeat: no-repeat; background-size: contain;background-position: center bottom; ">
+                        <img src="/Content/images/snowmobiling.jpg" style="visibility: hidden;" width="100%" />
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left"><strong>Snowmobiling Trails</strong></div>
+                        <div class="pull-right"><span class="glyphicon glyphicon-circle-arrow-right"></span></div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-4">
+            <a href="#">
+                <div class="panel panel-default book-now" style="margin-top: 20px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+                    <div class="panel-heading" style="background-image: url(/Content/images/skiing.jpg); background-repeat: no-repeat; background-size: contain;background-position: center bottom; ">
+                        <img src="/Content/images/skiing.jpg" style="visibility: hidden;" width="100%" />
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left"><strong>Ski Trails</strong></div>
+                        <div class="pull-right"><span class="glyphicon glyphicon-circle-arrow-right"></span></div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-4">
+            <a href="#">
+                <div class="panel panel-default book-now" style="margin-top: 20px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+                    <div class="panel-heading" style="background-image: url(/Content/images/atv.jpg); background-repeat: no-repeat; background-size: contain;background-position: center bottom; ">
+                        <img src="/Content/images/atv.jpg" style="visibility: hidden;" width="100%" />
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left"><strong>ATV Trails</strong></div>
+                        <div class="pull-right"><span class="glyphicon glyphicon-circle-arrow-right"></span></div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-4">
+            <a href="#">
+                <div class="panel panel-default book-now" style="margin-top: 20px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+                    <div class="panel-heading" style="background-image: url(/Content/images/nature.jpg); background-repeat: no-repeat; background-size: contain;background-position: center bottom; ">
+                        <img src="/Content/images/nature.jpg" style="visibility: hidden;" width="100%" />
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left"><strong>Nature Views</strong></div>
+                        <div class="pull-right"><span class="glyphicon glyphicon-circle-arrow-right"></span></div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-4">
+            <a href="#">
+                <div class="panel panel-default book-now" style="margin-top: 20px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+                    <div class="panel-heading" style="background-image: url(/Content/images/hiking.jpg); background-repeat: no-repeat; background-size: contain;background-position: center bottom; ">
+                        <img src="/Content/images/hiking.jpg" style="visibility: hidden;" width="100%" />
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left"><strong>Hiking Trails</strong></div>
+                        <div class="pull-right"><span class="glyphicon glyphicon-circle-arrow-right"></span></div>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 </div>

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using SalmonRiver;
+using SalmonRiver.Models;
 
 namespace SalmonRiver.Controllers
 {
@@ -22,8 +23,17 @@ namespace SalmonRiver.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(DateTime start, DateTime end, int guests)
+        public ActionResult Index(BookNowViewModel bookNow)
         {
+            if (bookNow.Start < DateTime.Today || bookNow.End < DateTime.Today || bookNow.End < bookNow.Start)
+            {
+                return RedirectToAction("Index", "Home", new { error = (int)Errors.BookNow_InvalidStartOrEndDate });
+            }
+
+            DateTime start = bookNow.Start;
+            DateTime end = bookNow.End;
+            int guests = bookNow.Guests;
+
             List<DateTime> requiredDates = new List<DateTime>();
 
             DateTime startRef = start.Date;
@@ -31,6 +41,20 @@ namespace SalmonRiver.Controllers
             {
                 requiredDates.Add(startRef);
                 startRef = startRef.AddDays(1);
+            }
+
+            DateTime holdExpires =DateTime.Now.ToUniversalTime().AddMinutes(5);
+
+            List<Hold> holds = db.Dates.Where(i=>requiredDates.Contains(i.Date1) && i.IsActive)
+                .Select(i=> new Hold(){
+                     DateID = i.DateID,
+                      Expiration = holdExpires
+                })
+                .ToList();
+
+            if(holds.Count() < requiredDates.Count()){
+                ViewBag.Error = "SOME_DATES_UNAVAILABLE";
+                return View();
             }
 
             DateTime expiration = DateTime.Now.ToUniversalTime();
@@ -46,7 +70,16 @@ namespace SalmonRiver.Controllers
             }
             else
             {
-                return View();
+                // hold for this user.
+                var dates = db.Holds.AddRange(holds).ToList();
+                Session["Holds"] = dates;
+
+                return View(new TemporaryReservationViewModel()
+                {
+                    Dates = dates.Select(i => i.Date.Date1).ToList(),
+                    Expires = holdExpires,
+                    GuestCount = guests
+                });
             }
         }
 

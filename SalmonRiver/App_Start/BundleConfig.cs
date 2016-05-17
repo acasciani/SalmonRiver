@@ -22,7 +22,7 @@ namespace SalmonRiver
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/moment.min.js", 
                       "~/Scripts/bootstrap.js", "~/Scripts/bootstrap-datetimepicker.min.js",
-                      "~/Scripts/respond.js", "~/Scripts/Site.js"));
+                      "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.min.css", "~/Content/bootstrap-datetimepicker.min.css", 
