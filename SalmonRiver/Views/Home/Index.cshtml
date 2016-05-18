@@ -1,4 +1,6 @@
-﻿@{
+﻿@model SalmonRiver.Models.BookNowViewModel
+
+@{
     ViewBag.Title = "Welcome!";
     ViewBag.HasHeaderCarousel = true;
     ViewBag.ActiveHeader = "Home";
@@ -16,11 +18,32 @@
 
 @section scripts {
     <script src="/Scripts/custom/HeaderNavBar.js"></script>
+
+    <script>
+        var availableDates = [];
+        @foreach (var availableDate in ViewBag.AvailableDates)
+        {
+            @:availableDates.push("@string.Format("{0:MM/dd/yyyy}", availableDate)");
+        }
+
+        $('#startDate').datetimepicker({ format: 'MM/DD/YYYY', enabledDates: availableDates });
+        $('#endDate').datetimepicker({
+            useCurrent: false, //Important! See issue #1075
+            format: 'MM/DD/YYYY',
+            enabledDates: availableDates
+        });
+        $("#startDate").on("dp.change", function (e) {
+            $('#endDate').data("DateTimePicker").minDate(e.date);
+        });
+        $("#endDate").on("dp.change", function (e) {
+            $('#startDate').data("DateTimePicker").maxDate(e.date);
+        });
+    </script>
+
 }
 
-@using(Html.BeginForm("Index", "Reserve", FormMethod.Post))
+@using(Html.BeginForm())
 { 
-    @model SalmonRiver.Models.BookNowViewModel
 <div class="booknow">
     <div class="container">
         <h3><label>Book Your Reservation Now</label></h3>
@@ -40,7 +63,7 @@
 
                     <div class='col-xs-5 col-sm-3'>
                         <div class="form-group">
-                            <div class='input-group date' id='datetimepicker6'>
+                            <div class='input-group date' id='startDate'>
                                 @Html.TextBoxFor(i=> i.Start, new { @class = "form-control", placeholder="Start" })
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
@@ -51,13 +74,14 @@
                     <label class="control-label col-xs-2 col-sm-1" style="text-align: center">to</label>
                     <div class='col-xs-5 col-sm-3'>
                         <div class="form-group">
-                            <div class='input-group date' id='datetimepicker7'>
-                                @Html.TextBoxFor(i => i.End, new { @class = "form-control", placeholder = "Start" })
+                            <div class='input-group date' id='endDate'>
+                                @Html.TextBoxFor(i => i.End, new { @class = "form-control", placeholder = "End" })
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
                             </div>
                         </div>
+
                     </div>
                     <div class="col-sm-2 col-xs-5 col-sm-offset-1">
                         <div class="form-group">
@@ -67,7 +91,7 @@
 
                     <div class="col-sm-2 col-xs-7" style="text-align: right">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Book&nbsp;&nbsp;&#10097;&#10097;</button>
+                            <button type="submit" class="btn btn-primary" onclick="return ">Book&nbsp;&nbsp;&#10097;&#10097;</button>
                         </div>
                     </div>
                 </div>

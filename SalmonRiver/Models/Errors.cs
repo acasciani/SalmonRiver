@@ -7,6 +7,6 @@ namespace SalmonRiver
 {
     public enum Errors
     {
-        BookNow_InvalidStartOrEndDate, BookNow_SomeDatesUnavailable, BookNow_SelectedDatesOnHold
+        BookNow_InvalidStartOrEndDate = 1, BookNow_SomeDatesUnavailable =2 , BookNow_SelectedDatesOnHold=3
     }
 }

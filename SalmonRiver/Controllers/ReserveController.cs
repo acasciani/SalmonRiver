@@ -13,6 +13,8 @@ namespace SalmonRiver.Controllers
 {
     public class ReserveController : Controller
     {
+        public const int HoldLength = 5; // minutes
+
         private SalmonRiverEntities db = new SalmonRiverEntities();
 
         // GET: Reserve
@@ -22,12 +24,27 @@ namespace SalmonRiver.Controllers
             return View(holds.ToList());
         }
 
-        [HttpPost]
-        public ActionResult Index(BookNowViewModel bookNow)
+        [NonAction]
+        public Errors? ValidateBookNowModel(BookNowViewModel model)
         {
-            if (bookNow.Start < DateTime.Today || bookNow.End < DateTime.Today || bookNow.End < bookNow.Start)
+            if (model.Start < DateTime.Today || model.End < DateTime.Today || model.End < model.Start)
             {
-                return RedirectToAction("Index", "Home", new { error = (int)Errors.BookNow_InvalidStartOrEndDate });
+                return Errors.BookNow_InvalidStartOrEndDate;
+            }
+
+            return null;
+        }
+
+        
+
+        [HttpPost]
+        public ActionResult BookNow(BookNowViewModel bookNow)
+        {
+            Errors? errors = ValidateBookNowModel(bookNow);
+
+            if (errors.HasValue)
+            {
+                return RedirectToAction("Index", "Home", new { error = (int)errors.Value });
             }
 
             DateTime start = bookNow.Start;
@@ -43,7 +60,7 @@ namespace SalmonRiver.Controllers
                 startRef = startRef.AddDays(1);
             }
 
-            DateTime holdExpires =DateTime.Now.ToUniversalTime().AddMinutes(5);
+            DateTime holdExpires =DateTime.Now.ToUniversalTime().AddMinutes(HoldLength);
 
             List<Hold> holds = db.Dates.Where(i=>requiredDates.Contains(i.Date1) && i.IsActive)
                 .Select(i=> new Hold(){
