@@ -20,7 +20,7 @@ namespace SalmonRiver.Models
 
     public class TemporaryReservationViewModel
     {
-        public List<DateTime> Dates { get; set; }
+        public List<Hold> Holds { get; set; }
         public int GuestCount { get; set; }
         public DateTime Expires { get; set; }
     }

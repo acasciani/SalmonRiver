@@ -7,13 +7,46 @@
 
     string errorMessage;
 
+    bool startDateError = false;
+    bool endDateError = false;
+    bool guestsError = false;
+
     switch ((Errors?)ViewBag.ErrorCode)
     {
-        case Errors.BookNow_InvalidStartOrEndDate: errorMessage = "Please select a valid start and end from the available dates."; break;
-        case Errors.BookNow_SelectedDatesOnHold: errorMessage = "One or more of the dates you selected are unavailable at the moment. Please try again a little later."; break;
-        case Errors.BookNow_SomeDatesUnavailable: errorMessage = "Some of the dates you selected are no longer available."; break;
+        case Errors.BookNow_InvalidStartOrEndDate:
+            startDateError = true;
+            endDateError = true;
+            errorMessage = "Please select a valid start and end from the available dates.";
+            
+            break;
+            
+        case Errors.BookNow_SelectedDatesOnHold: 
+            startDateError = true;
+            endDateError = true;
+            errorMessage = "One or more of the dates you selected are unavailable at the moment. Please try again a little later."; 
+            break;
+            
+        case Errors.BookNow_SomeDatesUnavailable: 
+            startDateError = true;
+            endDateError = true;
+            errorMessage = "Some of the dates you selected are no longer available."; 
+            break;
+            
+        case Errors.BookNow_InvalidGuestSelection:
+            guestsError = true;
+            errorMessage = "The number of selected guests is invalid. Please select how many guests will be attending.";
+            break;
+            
         default: errorMessage = null; break;
     }
+}
+
+@section styles {
+    <style type="text/css">
+        .header-site {
+            margin-bottom: -70px;
+        }
+    </style>
 }
 
 @section scripts {
@@ -32,6 +65,7 @@
             format: 'MM/DD/YYYY',
             enabledDates: availableDates
         });
+
         $("#startDate").on("dp.change", function (e) {
             $('#endDate').data("DateTimePicker").minDate(e.date);
         });
@@ -62,7 +96,7 @@
                 <div class="form-horizontal">
 
                     <div class='col-xs-5 col-sm-3'>
-                        <div class="form-group">
+                        <div class="@(!startDateError ? "form-group" : "form-group has-error has-feedback")">
                             <div class='input-group date' id='startDate'>
                                 @Html.TextBoxFor(i=> i.Start, new { @class = "form-control", placeholder="Start" })
                                 <span class="input-group-addon">
@@ -73,7 +107,7 @@
                     </div>
                     <label class="control-label col-xs-2 col-sm-1" style="text-align: center">to</label>
                     <div class='col-xs-5 col-sm-3'>
-                        <div class="form-group">
+                        <div class="@(!endDateError ? "form-group" : "form-group has-error has-feedback")">
                             <div class='input-group date' id='endDate'>
                                 @Html.TextBoxFor(i => i.End, new { @class = "form-control", placeholder = "End" })
                                 <span class="input-group-addon">
@@ -84,8 +118,15 @@
 
                     </div>
                     <div class="col-sm-2 col-xs-5 col-sm-offset-1">
-                        <div class="form-group">
-                            @Html.DropDownListFor(i => i.Guests, new List<SelectListItem>() { new SelectListItem() { Text = "1-4 guests", Value = "4" }, new SelectListItem() { Text = "5-6 guests", Value = "6" } }, new { @class = "form-control" })
+                        <div class="@(!guestsError ? "form-group" : "form-group has-error has-feedback")">
+                            @Html.DropDownListFor(i => i.Guests, new List<SelectListItem>() { 
+                           new SelectListItem() { Text = "# of guests" },
+                           new SelectListItem() { Text = "1 guest", Value = "1" }, 
+                           new SelectListItem() { Text = "2 guests", Value = "2" }, 
+                           new SelectListItem() { Text = "3 guests", Value = "3" }, 
+                           new SelectListItem() { Text = "4 guests", Value = "4" }, 
+                           new SelectListItem() { Text = "5 guests", Value = "5" }, 
+                           new SelectListItem() { Text = "6 guests", Value = "6" } }, new { @class = "form-control" })
                         </div>
                     </div>
 

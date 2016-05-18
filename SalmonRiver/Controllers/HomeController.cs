@@ -11,15 +11,17 @@ namespace SalmonRiver.Controllers
     {
         private SalmonRiverEntities db = new SalmonRiverEntities();
 
-        public ActionResult Index(int? error)
+        private List<DateTime> GetAvailableDates()
         {
             DateTime expiration = DateTime.Now.ToUniversalTime();
             DateTime maxBookDate = DateTime.Today.AddMonths(6);
+            List<DateTime> onHold = db.Holds.Where(i => expiration < i.Expiration).Select(i => i.Date.Date1).Distinct().ToList();
+            return db.Dates.Where(i => i.IsActive && i.Date1 >= DateTime.Today && i.Date1 <= maxBookDate && !onHold.Contains(i.Date1)).Select(i => i.Date1).Distinct().ToList();
+        }
 
-            List<DateTime> onHold = db.Holds.Where(i => i.Expiration < expiration).Select(i => i.Date.Date1).Distinct().ToList();
-            List<DateTime> available = db.Dates.Where(i => i.IsActive && i.Date1 >= DateTime.Today && i.Date1 <= maxBookDate && !onHold.Contains(i.Date1)).Select(i => i.Date1).Distinct().ToList();
-
-            ViewBag.AvailableDates = available;
+        public ActionResult Index(int? error)
+        {
+            ViewBag.AvailableDates = GetAvailableDates();
             ViewBag.ErrorCode = error.HasValue ? (Errors)error.Value : (Errors?)null;
 
             return View();
@@ -42,9 +44,58 @@ namespace SalmonRiver.Controllers
                     else
                     {
                         // do logic
+                        List<DateTime> requiredDates = new List<DateTime>();
+
+                        DateTime startRef = bookNow.Start.Date;
+                        while (startRef <= bookNow.End)
+                        {
+                            requiredDates.Add(startRef);
+                            startRef = startRef.AddDays(1);
+                        }
+
+                        DateTime holdExpires = DateTime.Now.ToUniversalTime().AddMinutes(ReserveController.HoldLength);
+
+                        List<Hold> holds = db.Dates.Where(i => requiredDates.Contains(i.Date1) && i.IsActive).ToList()
+                            .Select(i => new Hold()
+                            {
+                                DateID = i.DateID,
+                                Expiration = holdExpires
+                            })
+                            .ToList();
+
+                        if (holds.Count() < requiredDates.Count())
+                        {
+                            ViewBag.ErrorCode = Errors.BookNow_SomeDatesUnavailable;
+                        }
+
+                        DateTime expiration = DateTime.Now.ToUniversalTime();
+
+
+                        var check = db.Holds.Where(i => requiredDates.Contains(i.Date.Date1) && expiration <= i.Expiration).Count();
+
+                        if (check > 0)
+                        {
+                            // one or more of the days selected is already being held
+                            ViewBag.ErrorCode = Errors.BookNow_SelectedDatesOnHold;
+                        }
+                        else
+                        {
+                            // hold for this user.
+                            var dates = db.Holds.AddRange(holds).ToList();
+                            db.SaveChanges();
+
+                            Session["Hold"] = new TemporaryReservationViewModel()
+                            {
+                                Holds = dates,
+                                Expires = holdExpires,
+                                GuestCount = bookNow.Guests
+                            };
+                        }
                     }
                 }
             }
+
+            ViewBag.AvailableDates = GetAvailableDates();
 
             return View();
         }

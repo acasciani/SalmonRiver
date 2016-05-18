@@ -20,8 +20,30 @@ namespace SalmonRiver.Controllers
         // GET: Reserve
         public ActionResult Index()
         {
-            var holds = db.Holds.Include(h => h.Date);
-            return View(holds.ToList());
+            TemporaryReservationViewModel tempReservation = Session["Hold"] as TemporaryReservationViewModel;
+
+            if (tempReservation == null || tempReservation.Expires <= DateTime.Now.ToUniversalTime())
+            {
+                return View();
+            }
+            else
+            {
+                return View(tempReservation);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult CancelTemporaryHold()
+        {
+            TemporaryReservationViewModel tempHold = Session["Hold"] as TemporaryReservationViewModel;
+            List<int> holdsToCancel = tempHold.Holds.Select(i => i.HoldID).Distinct().ToList();
+
+            List<Hold> backDate = db.Holds.Where(i => holdsToCancel.Contains(i.HoldID)).ToList();
+            backDate.ForEach(i => i.Expiration = DateTime.Now.ToUniversalTime());
+            db.SaveChanges();
+            Session.Remove("Hold");
+
+            return Json(true);
         }
 
         [NonAction]
@@ -32,73 +54,14 @@ namespace SalmonRiver.Controllers
                 return Errors.BookNow_InvalidStartOrEndDate;
             }
 
+            if (model.Guests < 1 || model.Guests > 6)
+            {
+                return Errors.BookNow_InvalidGuestSelection;
+            }
+
             return null;
         }
 
-        
-
-        [HttpPost]
-        public ActionResult BookNow(BookNowViewModel bookNow)
-        {
-            Errors? errors = ValidateBookNowModel(bookNow);
-
-            if (errors.HasValue)
-            {
-                return RedirectToAction("Index", "Home", new { error = (int)errors.Value });
-            }
-
-            DateTime start = bookNow.Start;
-            DateTime end = bookNow.End;
-            int guests = bookNow.Guests;
-
-            List<DateTime> requiredDates = new List<DateTime>();
-
-            DateTime startRef = start.Date;
-            while (startRef <= end)
-            {
-                requiredDates.Add(startRef);
-                startRef = startRef.AddDays(1);
-            }
-
-            DateTime holdExpires =DateTime.Now.ToUniversalTime().AddMinutes(HoldLength);
-
-            List<Hold> holds = db.Dates.Where(i=>requiredDates.Contains(i.Date1) && i.IsActive)
-                .Select(i=> new Hold(){
-                     DateID = i.DateID,
-                      Expiration = holdExpires
-                })
-                .ToList();
-
-            if(holds.Count() < requiredDates.Count()){
-                ViewBag.Error = "SOME_DATES_UNAVAILABLE";
-                return View();
-            }
-
-            DateTime expiration = DateTime.Now.ToUniversalTime();
-
-            var check = db.Holds.Where(i => requiredDates.Contains(i.Date.Date1) && expiration <= i.Expiration).Count();
-
-            if (check > 0)
-            {
-                // one or more of the days selected is already being held
-
-                ViewBag.Error = "BEING_HELD";
-                return View();
-            }
-            else
-            {
-                // hold for this user.
-                var dates = db.Holds.AddRange(holds).ToList();
-                Session["Holds"] = dates;
-
-                return View(new TemporaryReservationViewModel()
-                {
-                    Dates = dates.Select(i => i.Date.Date1).ToList(),
-                    Expires = holdExpires,
-                    GuestCount = guests
-                });
-            }
-        }
 
         protected override void Dispose(bool disposing)
         {

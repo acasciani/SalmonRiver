@@ -1,39 +1,219 @@
-﻿@model IEnumerable<SalmonRiver.Hold>
+﻿@model SalmonRiver.Models.TemporaryReservationViewModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Complete Reservation";
 }
 
-<h2>Index</h2>
+@section styles {
+    <style type="text/css">
+        .checkin .dateinfo, .checkout .dateinfo {
+            background-color:#f5f5f5; 
+            border-right:solid 1px #ddd;
+        }
+        .dateinfo .date {
+            font-weight: bold;
+        }
+        .dateinfo .time {
+            font-style:italic;
+        }
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Expiration)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Date.DateID)
-        </th>
-        <th></th>
-    </tr>
+        .checkin .description, .checkout .description {
+            font-size: 1.3em;
+        }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Expiration)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Date.DateID)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.HoldID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.HoldID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.HoldID })
-        </td>
-    </tr>
+        .dl-horizontal.details-of-stay {
+            margin-bottom: 0px;
+        }
+    </style>
 }
 
-</table>
+
+@if (Model == null) 
+{ 
+    <div class="container main-content">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="alert alert-danger" role="alert">
+                    You have not selected any dates or your session as expired. @Html.ActionLink("Please click here to book now.", "Index", "Home")
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container main-content">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="alert alert-success" role="alert">
+                    <strong>Confirmation and Payment</strong> - Your session will expire at @Model.Expires.ToLocalTime().ToString("h:mm tt"). After that you will no longer have first priority to the dates you selected, unless you rebook. Please confirm and proceed to process your payment.
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>Details About Your Stay</h2>
+            </div>
+            <div class="col-xs-8 col-sm-6">
+                <div class="row">
+                    <div class="col-sm-12 checkin">
+                        <div class="panel panel-default">
+                            <div class="panel-body col-sm-6 col-md-4 text-center dateinfo">
+                                <div class="date text-center">Wednesday, June 1</div>
+                                <div class="time text-center">11:00 am</div>
+                            </div>
+                            <div class="panel-body col-sm-6 col-md-8 description text-center">Check In</div>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 checkout">
+                        <div class="panel panel-default">
+                            <div class="panel-body col-sm-6 col-md-4 text-center dateinfo">
+                                <div class="date text-center">Friday, June 3</div>
+                                <div class="time text-center">11:00 am</div>
+                            </div>
+                            <div class="panel-body col-sm-6 col-md-8 description text-center">Check Out</div>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-4 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <dl class="dl-horizontal details-of-stay">
+                            <dt># of Guests:</dt>
+                            <dd>3</dd>
+
+                            <dt>Price Per Night:</dt>
+                            <dd>$125</dd>
+
+                            <dt>Length of Stay:</dt>
+                            <dd>6 nights</dd>
+
+                            <dt>Total Cost:</dt>
+                            <dd>$459.00</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>Contact Information</h2>
+            </div>
+            <div class="col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="FullName">Full Name</label>
+                            <input type="text" class="form-control" id="FullName">
+                        </div>
+                        <div class="form-group">
+                            <label for="EmailAddress">Email Address</label>
+                            <input type="email" class="form-control" id="EmailAddress">
+                        </div>
+                        <div class="form-group">
+                            <label for="PhoneNumber">Phone Number</label>
+                            <input type="tel" class="form-control" id="PhoneNumber">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>Billing Information</h2>
+            </div>
+            <div class="col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="CardName">Name on Card</label>
+                                    <input type="text" class="form-control" id="CardName">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="CCNumber">Credit Card Number</label>
+                                    <input type="email" class="form-control" id="CCNumber">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <label for="ExpirationMonth">Expiration Date</label>
+                                        </div>
+                                        <div class="col-xs-5">
+                                            <select class="form-control" id="ExpirationMonth">
+                                                <option>01</option>
+                                                <option>02</option>
+                                                <option>03</option>
+                                                <option>04</option>
+                                                <option>05</option>
+                                                <option>06</option>
+                                                <option>07</option>
+                                                <option>08</option>
+                                                <option>09</option>
+                                                <option>10</option>
+                                                <option>11</option>
+                                                <option>12</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-2 text-center form-control-static">
+                                            /
+                                        </div>
+                                        <div class="col-xs-5">
+                                            <select class="form-control" id="ExpirationYear">
+                                                <option>2016</option>
+                                                <option>2017</option>
+                                                <option>2018</option>
+                                                <option>2019</option>
+                                                <option>2020</option>
+                                                <option>2021</option>
+                                                <option>2022</option>
+                                                <option>2023</option>
+                                                <option>2024</option>
+                                                <option>2025</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="CVV2">CVV2</label>
+                                    <input type="number" class="form-control" id="CVV2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <button type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon-credit-card"></span>&nbsp;Process Payment
+                </button>
+
+                <button type="submit" class="btn btn-danger">
+                    &nbsp;Cancel Reservation
+                </button>
+            </div>
+        </div>
+
+    </div>
+}

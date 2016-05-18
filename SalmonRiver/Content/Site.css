@@ -30,10 +30,6 @@ body {
         top: 20%;
     }
 
-.header-site {
-    margin-bottom: -70px;
-}
-
     .header-site.affix {
         position: fixed;
         top: 0;
@@ -216,4 +212,9 @@ footer {
 
 .text-center {
     text-align: center;
+}
+
+.container.main-content {
+    margin-top:20px;
+    margin-bottom: 20px;
 }
