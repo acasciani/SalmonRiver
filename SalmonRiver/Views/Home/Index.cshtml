@@ -1,7 +1,7 @@
 ﻿@model SalmonRiver.Models.BookNowViewModel
 
 @{
-    ViewBag.Title = "Welcome!";
+    ViewBag.Title = "Welcome";
     ViewBag.HasHeaderCarousel = true;
     ViewBag.ActiveHeader = "Home";
 
@@ -35,6 +35,13 @@
         case Errors.BookNow_InvalidGuestSelection:
             guestsError = true;
             errorMessage = "The number of selected guests is invalid. Please select how many guests will be attending.";
+            break;
+            
+        case Errors.BookNow_OtherError:
+            guestsError = true;
+            startDateError = true;
+            endDateError = true;
+            errorMessage = "An error occurred. Please make sure you select a start date, end date and the number of guests.";
             break;
             
         default: errorMessage = null; break;
@@ -163,7 +170,7 @@
 
 
         <div class="col-sm-4">
-            <a href="#">
+            <a href="http://www.dec.ny.gov/outdoor/21663.html">
                 <div class="panel panel-default book-now" style="margin-top: 20px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
                     <div class="panel-heading" style="background-image: url(/Content/images/SalmonRiverFishHatchery.jpg); background-repeat: no-repeat; background-size: contain;background-position: center bottom; ">
                         <img src="/Content/images/SalmonRiverFishHatchery.jpg" style="visibility: hidden;" width="100%" />
@@ -177,7 +184,7 @@
         </div>
 
         <div class="col-sm-4">
-            <a href="#">
+            <a href="http://www.visitoswegocounty.com/snowmobile/">
                 <div class="panel panel-default book-now" style="margin-top: 20px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
                     <div class="panel-heading" style="background-image: url(/Content/images/snowmobiling.jpg); background-repeat: no-repeat; background-size: contain;background-position: center bottom; ">
                         <img src="/Content/images/snowmobiling.jpg" style="visibility: hidden;" width="100%" />
@@ -191,7 +198,7 @@
         </div>
 
         <div class="col-sm-4">
-            <a href="#">
+            <a href="http://visitoswegocounty.com/the-great-outdoors/cross-country-skiing-snowshoeing/">
                 <div class="panel panel-default book-now" style="margin-top: 20px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
                     <div class="panel-heading" style="background-image: url(/Content/images/skiing.jpg); background-repeat: no-repeat; background-size: contain;background-position: center bottom; ">
                         <img src="/Content/images/skiing.jpg" style="visibility: hidden;" width="100%" />
@@ -205,7 +212,7 @@
         </div>
 
         <div class="col-sm-4">
-            <a href="#">
+            <a href="http://www.oswegocountyatv.org/">
                 <div class="panel panel-default book-now" style="margin-top: 20px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
                     <div class="panel-heading" style="background-image: url(/Content/images/atv.jpg); background-repeat: no-repeat; background-size: contain;background-position: center bottom; ">
                         <img src="/Content/images/atv.jpg" style="visibility: hidden;" width="100%" />
@@ -219,7 +226,7 @@
         </div>
 
         <div class="col-sm-4">
-            <a href="#">
+            <a href="http://oswegocounty.maps.arcgis.com/apps/MapTour/index.html?appid=af44af41ab5642d7958e229a61bfceb0">
                 <div class="panel panel-default book-now" style="margin-top: 20px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
                     <div class="panel-heading" style="background-image: url(/Content/images/nature.jpg); background-repeat: no-repeat; background-size: contain;background-position: center bottom; ">
                         <img src="/Content/images/nature.jpg" style="visibility: hidden;" width="100%" />
@@ -233,7 +240,7 @@
         </div>
 
         <div class="col-sm-4">
-            <a href="#">
+            <a href="http://oswegocounty.maps.arcgis.com/apps/MapTour/index.html?appid=af44af41ab5642d7958e229a61bfceb0">
                 <div class="panel panel-default book-now" style="margin-top: 20px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
                     <div class="panel-heading" style="background-image: url(/Content/images/hiking.jpg); background-repeat: no-repeat; background-size: contain;background-position: center bottom; ">
                         <img src="/Content/images/hiking.jpg" style="visibility: hidden;" width="100%" />

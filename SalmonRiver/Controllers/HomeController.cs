@@ -29,68 +29,74 @@ namespace SalmonRiver.Controllers
 
         [HttpPost]
         public ActionResult Index(BookNowViewModel bookNow)
-        {
-            if (ModelState.IsValid)
+        { 
+            // now check to see that the model is actually passes validation
+            using (ReserveController rc = new ReserveController())
             {
-                // now check to see that the model is actually passes validation
-                using (ReserveController rc = new ReserveController())
-                {
-                    Errors? errors = rc.ValidateBookNowModel(bookNow);
+                Errors? errors = rc.ValidateBookNowModel(bookNow);
 
+                if (ModelState.IsValid && !errors.HasValue)
+                {
+                    // do logic
+                    List<DateTime> requiredDates = new List<DateTime>();
+
+                    DateTime startRef = bookNow.Start.Date;
+                    while (startRef <= bookNow.End)
+                    {
+                        requiredDates.Add(startRef);
+                        startRef = startRef.AddDays(1);
+                    }
+
+                    DateTime holdExpires = DateTime.Now.ToUniversalTime().AddMinutes(ReserveController.HoldLength);
+
+                    List<Hold> holds = db.Dates.Where(i => requiredDates.Contains(i.Date1) && i.IsActive).ToList()
+                        .Select(i => new Hold()
+                        {
+                            DateID = i.DateID,
+                            Expiration = holdExpires
+                        })
+                        .ToList();
+
+                    if (holds.Count() < requiredDates.Count())
+                    {
+                        ViewBag.ErrorCode = Errors.BookNow_SomeDatesUnavailable;
+                    }
+
+                    DateTime expiration = DateTime.Now.ToUniversalTime();
+
+
+                    var check = db.Holds.Where(i => requiredDates.Contains(i.Date.Date1) && expiration <= i.Expiration).Count();
+
+                    if (check > 0)
+                    {
+                        // one or more of the days selected is already being held
+                        ViewBag.ErrorCode = Errors.BookNow_SelectedDatesOnHold;
+                    }
+                    else
+                    {
+                        // hold for this user.
+                        var dates = db.Holds.AddRange(holds).ToList();
+                        db.SaveChanges();
+
+                        Session["Hold"] = new TemporaryReservationViewModel()
+                        {
+                            Holds = dates,
+                            Expires = holdExpires,
+                            GuestCount = bookNow.Guests
+                        };
+
+                        return RedirectToAction("Index", "Reserve");
+                    }
+                }
+                else
+                {
                     if (errors.HasValue)
                     {
                         ViewBag.ErrorCode = errors.Value;
                     }
                     else
                     {
-                        // do logic
-                        List<DateTime> requiredDates = new List<DateTime>();
-
-                        DateTime startRef = bookNow.Start.Date;
-                        while (startRef <= bookNow.End)
-                        {
-                            requiredDates.Add(startRef);
-                            startRef = startRef.AddDays(1);
-                        }
-
-                        DateTime holdExpires = DateTime.Now.ToUniversalTime().AddMinutes(ReserveController.HoldLength);
-
-                        List<Hold> holds = db.Dates.Where(i => requiredDates.Contains(i.Date1) && i.IsActive).ToList()
-                            .Select(i => new Hold()
-                            {
-                                DateID = i.DateID,
-                                Expiration = holdExpires
-                            })
-                            .ToList();
-
-                        if (holds.Count() < requiredDates.Count())
-                        {
-                            ViewBag.ErrorCode = Errors.BookNow_SomeDatesUnavailable;
-                        }
-
-                        DateTime expiration = DateTime.Now.ToUniversalTime();
-
-
-                        var check = db.Holds.Where(i => requiredDates.Contains(i.Date.Date1) && expiration <= i.Expiration).Count();
-
-                        if (check > 0)
-                        {
-                            // one or more of the days selected is already being held
-                            ViewBag.ErrorCode = Errors.BookNow_SelectedDatesOnHold;
-                        }
-                        else
-                        {
-                            // hold for this user.
-                            var dates = db.Holds.AddRange(holds).ToList();
-                            db.SaveChanges();
-
-                            Session["Hold"] = new TemporaryReservationViewModel()
-                            {
-                                Holds = dates,
-                                Expires = holdExpires,
-                                GuestCount = bookNow.Guests
-                            };
-                        }
+                        ViewBag.ErrorCode = Errors.BookNow_OtherError;
                     }
                 }
             }
@@ -102,8 +108,16 @@ namespace SalmonRiver.Controllers
 
         public ActionResult Amenities()
         {
-            ViewBag.Message = "Your application description page.";
+            return View();
+        }
 
+        public ActionResult Photos()
+        {
+            return View();
+        }
+
+        public ActionResult Contact()
+        {
             return View();
         }
 

@@ -4,6 +4,18 @@
     ViewBag.Title = "Complete Reservation";
 }
 
+@section scripts{
+    <script type="text/javascript">
+        $('#CancelHold').click(function () {
+            $.post('/Reserve/CancelTemporaryHold', {}, function (data, status, xhr) {
+                window.location.replace("/");
+            }).fail(function () {
+
+            });
+        });
+    </script>
+}
+
 @section styles {
     <style type="text/css">
         .checkin .dateinfo, .checkout .dateinfo {
@@ -209,7 +221,7 @@ else
                     <span class="glyphicon glyphicon-credit-card"></span>&nbsp;Process Payment
                 </button>
 
-                <button type="submit" class="btn btn-danger">
+                <button type="button" class="btn btn-danger" id="CancelHold">
                     &nbsp;Cancel Reservation
                 </button>
             </div>

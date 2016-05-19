@@ -9,8 +9,9 @@ namespace SalmonRiver
     {
         BookNow_InvalidStartOrEndDate = 1, 
         BookNow_SomeDatesUnavailable = 2, 
-        BookNow_SelectedDatesOnHold = 3, 
+        BookNow_SelectedDatesOnHold = 3,
         BookNow_InvalidGuestSelection = 4,
-        Reserve_BookNowSessionExpired = 5
+        BookNow_OtherError = 5,
+        Reserve_BookNowSessionExpired = 6
     }
 }

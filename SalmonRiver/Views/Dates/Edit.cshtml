@@ -1,79 +1,87 @@
 ﻿@model SalmonRiver.Date
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Date Availability";
 }
 
-<h2>Edit</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div>
+                <h2>Edit Date Availability</h2>
+            </div>
+        </div>
+    </div>
 
 
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Date</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.DateID)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Date1, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Date1, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Date1, "", new { @class = "text-danger" })
-            </div>
+            @Html.LabelFor(model => model.Date1, "Date", htmlAttributes: new { @class = "control-label" })
+            @Html.TextBoxFor(model => model.Date1, new { @Value = Model.Date1.ToString("MM/dd/yyyy"), @class = "form-control", @disabled = "true" })
+            @Html.ValidationMessageFor(model => model.Date1, "", new { @class = "text-danger" })
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.HolidayID, "HolidayID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("HolidayID", null, htmlAttributes: new { @class = "form-control" }, optionLabel: "-- Select a Holiday --")
-                @Html.ValidationMessageFor(model => model.HolidayID, "", new { @class = "text-danger" })
-            </div>
+            @Html.LabelFor(model => model.HolidayID, "Holiday", htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownList("HolidayID", null, htmlAttributes: new { @class = "form-control" }, optionLabel: "-- Select a Holiday --")
+            @Html.ValidationMessageFor(model => model.HolidayID, "", new { @class = "text-danger" })
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CheckIn, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.CheckIn, "Checkin Time", htmlAttributes: new { @class = "control-label" })
+            <div class="input-group date" id="checkin">
                 @Html.EditorFor(model => model.CheckIn, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CheckIn, "", new { @class = "text-danger" })
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
             </div>
+            @Html.ValidationMessageFor(model => model.CheckIn, "", new { @class = "text-danger" })
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CheckOut, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.CheckOut, "Checkout Time", htmlAttributes: new { @class = "control-label" })
+            <div class="input-group date" id="checkout">
                 @Html.EditorFor(model => model.CheckOut, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CheckOut, "", new { @class = "text-danger" })
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+            @Html.ValidationMessageFor(model => model.CheckOut, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    @Html.EditorFor(model => model.IsActive) Is Active
+                </label>
+                @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsActive)
-                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
-                </div>
-            </div>
+            <input type="submit" value="Save" class="btn btn-default" /> &nbsp;&nbsp;&nbsp;&nbsp; @Html.ActionLink("Back to List", "Index")
         </div>
+    }
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(function () {
+            $('#checkout').datetimepicker({
+                sideBySide: true
+            });
+
+            $('#checkin').datetimepicker({
+                sideBySide: true
+            });
+        });
+    </script>
 }

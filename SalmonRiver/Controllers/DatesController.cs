@@ -11,6 +11,7 @@ using PagedList;
 
 namespace SalmonRiver.Controllers
 {
+    [Authorize(Roles="Admin")]
     public class DatesController : Controller
     {
         private SalmonRiverEntities db = new SalmonRiverEntities();

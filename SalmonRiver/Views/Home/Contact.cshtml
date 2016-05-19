@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Contact Information";
+    ViewBag.HasHeaderCarousel = false;
+    ViewBag.ActiveHeader = "Contact";
+}
+
+@section styles {
+<style type="text/css">
+    .contact-info .dl-horizontal dt {
+        width: 50px;
+    }
+
+    .contact-info .dl-horizontal dd {
+        margin-left: 70px;
+    }
+
+    .contact-info .dl-horizontal dt {
+            float: left;
+    }
+</style>
+}
+
+<div class="container main-content">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row contact-info">
+                <div class="col-sm-12">
+                    <h2>Contact Information</h2>
+                </div>
+                <div class="col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <dl class="dl-horizontal">
+                                <dt><span class="glyphicon glyphicon-envelope"></span></dt>
+                                <dd><a href="mailto:info@headwaterscabinsatsalmonriver.com">info@headwaterscabinsatsalmonriver.com</a></dd>
+                            </dl>
+
+                            <dl class="dl-horizontal">
+                                <dt><span class="glyphicon glyphicon-earphone"></span></dt>
+                                <dd><a href="tel:+15555551234">(555) 555-1234</a></dd>
+                            </dl>
+
+                            <dl class="dl-horizontal">
+                                <dt><span class="glyphicon glyphicon-map-marker"></span></dt>
+                                <dd>2358 County Rt. 22<br />Altmar, New York 13302</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>Get Directions</h2>
+                </div>
+                <div class="col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d185104.12117154573!2d-76.20260801208632!3d43.53879088582897!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89d9b32e16b1dc95%3A0xeded02c794410a90!2s2358+County+Rte+22%2C+Altmar%2C+NY+13302!5e0!3m2!1sen!2sus!4v1463689321455" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

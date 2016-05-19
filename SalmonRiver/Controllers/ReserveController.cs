@@ -13,7 +13,7 @@ namespace SalmonRiver.Controllers
 {
     public class ReserveController : Controller
     {
-        public const int HoldLength = 5; // minutes
+        public const int HoldLength = 15; // minutes
 
         private SalmonRiverEntities db = new SalmonRiverEntities();
 
