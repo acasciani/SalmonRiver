@@ -23,7 +23,6 @@
 </head>
 
 <body>
-    <div class="nonfooter">
         @if (ViewBag.HasHeaderCarousel as bool? ?? false)
         {
             <div id="body">
@@ -81,10 +80,10 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li class="@(ViewBag.ActiveHeader == "Home" ? "active" : "")">@Html.ActionLink("Welcome", "Index", "Home")</li>
-                            <li class="@(ViewBag.ActiveHeader == "Amenities" ? "active" : "")">@Html.ActionLink("Amenities", "Amenities", "Home")</li>
-                            <li class="@(ViewBag.ActiveHeader == "Photos" ? "active" : "")">@Html.ActionLink("Photos", "Photos", "Home")</li>
-                            <li class="@(ViewBag.ActiveHeader == "Contact" ? "active" : "")">@Html.ActionLink("Contact", "Contact", "Home")</li>
+                            <li class="link@(ViewBag.ActiveHeader == "Home" ? " active" : "")">@Html.ActionLink("Welcome", "Index", "Home")</li>
+                            <li class="link@(ViewBag.ActiveHeader == "Amenities" ? " active" : "")">@Html.ActionLink("Amenities", "Amenities", "Home")</li>
+                            <li class="link@(ViewBag.ActiveHeader == "Photos" ? " active" : "")">@Html.ActionLink("Photos", "Photos", "Home")</li>
+                            <li class="link@(ViewBag.ActiveHeader == "Contact" ? " active" : "")">@Html.ActionLink("Contact", "Contact", "Home")</li>
                         </ul>
 
                         @if (User.Identity.IsAuthenticated)
@@ -95,7 +94,7 @@
                                 <ul class="nav navbar-nav navbar-right">
                                     @if (User.IsInRole("Admin"))
                                     {
-                                        <li class="dropdown">
+                                        <li class="dropdown link">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administrate <span class="caret"></span></a>
                                             <ul class="dropdown-menu">
                                                 <li>
@@ -108,7 +107,7 @@
 
 
 
-                                    <li class="login-link">
+                                    <li class="login-link link">
                                         <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
                                     </li>
 
@@ -122,7 +121,7 @@
         </div>
 
         @RenderBody()
-    </div>
+
 
         <footer>
             <div class="container">
@@ -147,7 +146,6 @@
                 </div>
             </div>
         </footer>
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
