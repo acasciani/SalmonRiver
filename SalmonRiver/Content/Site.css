@@ -4,16 +4,16 @@ body {
     padding: 0;
     height: 100%;
     font-family: 'Open Sans', sans-serif;
-    font-size: 18px;
 }
 
 h1, h2, h3 {
     font-family: 'Open Sans Condensed', sans-serif;
-    font-weight: bold;
 }
 
 .navbar.top li.link > a {
     font-family: 'Open Sans Condensed', sans-serif;
+    font-size: 1.6em;
+    font-weight: normal;
 }
 
 footer {
