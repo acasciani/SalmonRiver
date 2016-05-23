@@ -11,6 +11,7 @@ using SalmonRiver.Models;
 using RestSharp;
 using System.Configuration;
 using System.Web.Script.Serialization;
+using Postal;
 
 namespace SalmonRiver.Controllers
 {
@@ -144,6 +145,19 @@ namespace SalmonRiver.Controllers
                         db.TransactionLogs.Add(log);
                         db.SaveChanges();
 
+                        // send email
+                        dynamic email = new Email("ReservationSuccessful");
+                        email.To = reservation.EmailAddress;
+                        email.FullName = reservation.FullName;
+                        email.CheckIn = reservation.ReservationDates.OrderBy(i => i.Date.Date1).First().Date.CheckIn;
+                        email.CheckOut = reservation.ReservationDates.OrderByDescending(i => i.Date.Date1).First().Date.CheckOut;
+                        email.GuestCount = reservation.GuestCount;
+                        email.TotalCost = reservation.AmountPaid.ToString("C");
+                        email.ReferenceNumber = reservation.TransactionLog.ReferenceKey;
+                        email.Send();
+
+                        Session.Remove("Hold");
+
                         return RedirectToAction("Completed", new { id = log.TransactionID });
                     }
                 }
@@ -159,10 +173,12 @@ namespace SalmonRiver.Controllers
                         Timestamp = DateTime.UtcNow
                     };
 
-                    tempReservation.ExtendExpiration(24*60); // extend by 1 day
+                    tempReservation.ExtendExpiration(48*60); // extend by 2 days
 
                     db.TransactionLogs.Add(log);
                     db.SaveChanges();
+
+                    Session.Remove("Hold");
 
                     return RedirectToAction("Failed", new { id = log.TransactionID });
                 }

@@ -1,0 +1,17 @@
+﻿Content-Type: text/plain; charset=utf-8
+
+Dear @ViewBag.FullName,
+
+Thank you for booking your stay at the Head Waters Cabins at the Salmon River. Your reservation is completed. Please find your receipt below:
+
+Check-In: @(ViewBag.CheckIn as DateTime? == null ? "N/A" : (ViewBag.CheckIn as DateTime?).Value.ToString("dddd, MMMM d, yyyy - h:mm tt"))
+Check-Out: @(ViewBag.CheckOut as DateTime? == null ? "N/A" : (ViewBag.CheckOut as DateTime?).Value.ToString("dddd, MMMM d, yyyy - h:mm tt"))
+Guests: @ViewBag.GuestCount
+Total Cost: @ViewBag.TotalCost
+Reference #: @ViewBag.ReferenceNumber
+
+If you have any questions, please contact me.
+
+Sincerely,
+
+Josephine Matela

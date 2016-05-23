@@ -1,0 +1,54 @@
+﻿Content-Type: text/html; charset=utf-8
+
+<html>
+<body>
+    <table width="100%" cellspacing="0" cellpadding="0" align="center">
+        <tbody>
+            <tr>
+                <td align="center">
+                    <img src="@(new Uri(Request.Url, Url.Content("~/Content/images/logo.png?h=100")))" />
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <br>
+                    <table width="600" cellspacing="0" cellpadding="0">
+                        <tbody>
+                            <tr>
+                                <td>
+
+                                    <p>Dear @ViewBag.FullName,</p>
+
+                                    <p>Thank you for booking your stay at the Head Waters Cabins at the Salmon River. Your reservation is completed. Please find your receipt below:</p>
+
+                                    <p>
+                                        <strong>Check-In:</strong> @(ViewBag.CheckIn as DateTime? == null ? "N/A" : (ViewBag.CheckIn as DateTime?).Value.ToString("dddd, MMMM d, yyyy - h:mm tt"))
+                                        <br><strong>Check-Out:</strong> @(ViewBag.CheckOut as DateTime? == null ? "N/A" : (ViewBag.CheckOut as DateTime?).Value.ToString("dddd, MMMM d, yyyy - h:mm tt"))
+                                        <br><strong>Guests:</strong> @ViewBag.GuestCount
+                                        <br><strong>Total Cost:</strong> @ViewBag.TotalCost
+                                        <br><strong>Reference #:</strong> @ViewBag.ReferenceNumber
+                                    </p>
+
+                                    <p>
+                                        If you have any questions, please contact me.
+                                    </p>
+
+                                    <p>
+                                        Sincerely,
+                                    </p>
+
+                                    <p>
+                                        Josephine Matela
+                                    </p>
+
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
