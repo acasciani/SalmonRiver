@@ -12,26 +12,26 @@ namespace SalmonRiver
     using System;
     using System.Collections.Generic;
     
-    public partial class Date
+    public partial class Reservation
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Date()
+        public Reservation()
         {
-            this.Holds = new HashSet<Hold>();
-            this.Reservations = new HashSet<Reservation>();
+            this.Dates = new HashSet<Date>();
         }
     
-        public int DateID { get; set; }
-        public System.DateTime Date1 { get; set; }
-        public Nullable<int> HolidayID { get; set; }
-        public System.DateTime CheckIn { get; set; }
-        public System.DateTime CheckOut { get; set; }
-        public bool IsActive { get; set; }
+        public int ReservationID { get; set; }
+        public System.DateTime CreateDate { get; set; }
+        public Nullable<System.DateTime> ModifyDate { get; set; }
+        public int GuestCount { get; set; }
+        public decimal AmountPaid { get; set; }
+        public string FullName { get; set; }
+        public string EmailAddress { get; set; }
+        public string PhoneNumber { get; set; }
+        public int TransactionID { get; set; }
     
-        public virtual Holiday Holiday { get; set; }
+        public virtual TransactionLog TransactionLog { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Hold> Holds { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Reservation> Reservations { get; set; }
+        public virtual ICollection<Date> Dates { get; set; }
     }
 }

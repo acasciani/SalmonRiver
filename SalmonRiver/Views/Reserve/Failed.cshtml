@@ -1,0 +1,24 @@
+﻿@model SalmonRiver.TransactionLog
+
+@{
+    ViewBag.Title = "Failed to Book";
+}
+
+@section scripts{
+
+}
+
+@section styles {
+
+}
+
+<div class="container main-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-danger" role="alert">
+                An error occurred while trying to book your stay. The reference number is @Model.ReferenceKey. The dates you are interested in have been put on hold for 24 hours. Please contact us now to 
+                look into the issue. Make sure to include your reference number.
+            </div>
+        </div>
+    </div>
+</div>

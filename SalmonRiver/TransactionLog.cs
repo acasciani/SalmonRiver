@@ -12,25 +12,22 @@ namespace SalmonRiver
     using System;
     using System.Collections.Generic;
     
-    public partial class Date
+    public partial class TransactionLog
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Date()
+        public TransactionLog()
         {
-            this.Holds = new HashSet<Hold>();
             this.Reservations = new HashSet<Reservation>();
         }
     
-        public int DateID { get; set; }
-        public System.DateTime Date1 { get; set; }
-        public Nullable<int> HolidayID { get; set; }
-        public System.DateTime CheckIn { get; set; }
-        public System.DateTime CheckOut { get; set; }
-        public bool IsActive { get; set; }
+        public int TransactionID { get; set; }
+        public System.DateTime Timestamp { get; set; }
+        public string CardNonce { get; set; }
+        public System.Guid IdempotencyKey { get; set; }
+        public bool Successful { get; set; }
+        public System.Guid ReferenceKey { get; set; }
+        public string ErrorMessage { get; set; }
     
-        public virtual Holiday Holiday { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Hold> Holds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Reservation> Reservations { get; set; }
     }

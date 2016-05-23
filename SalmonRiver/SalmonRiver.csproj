@@ -239,8 +239,15 @@
     <Compile Include="Models\Errors.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\SquareLocation.cs" />
     <Compile Include="Models\TemporaryReservation.cs" />
+    <Compile Include="PricingModel.cs">
+      <DependentUpon>SalmonRiverModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reservation.cs">
+      <DependentUpon>SalmonRiverModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="SalmonRiverModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -257,6 +264,9 @@
       <DependentUpon>SalmonRiverModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="TransactionLog.cs">
+      <DependentUpon>SalmonRiverModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-datetimepicker.css" />
@@ -454,6 +464,8 @@
     <Content Include="Views\Reserve\Index.cshtml" />
     <Content Include="Views\Home\Photos.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Reserve\Failed.cshtml" />
+    <Content Include="Views\Reserve\Completed.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

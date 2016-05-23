@@ -81,7 +81,6 @@ namespace SalmonRiver.Controllers
                         Session["Hold"] = new TemporaryReservationViewModel()
                         {
                             Holds = dates,
-                            Expires = holdExpires,
                             GuestCount = bookNow.Guests
                         };
 

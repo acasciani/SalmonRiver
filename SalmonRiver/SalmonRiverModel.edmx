@@ -23,6 +23,52 @@
           <Property Name="HolidayID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Holiday" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
+        <EntityType Name="PricingModels">
+          <Key>
+            <PropertyRef Name="PricingModelID" />
+          </Key>
+          <Property Name="PricingModelID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GuestCount" Type="int" Nullable="false" />
+          <Property Name="StayDate" Type="date" />
+          <Property Name="StayCost" Type="decimal" Precision="8" Scale="2" Nullable="false" />
+          <Property Name="Notes" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SalmonRiver.headwaters.ReservationDates' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ReservationDates">
+          <Key>
+            <PropertyRef Name="ReservationID" />
+            <PropertyRef Name="DateID" />
+          </Key>
+          <Property Name="ReservationID" Type="int" Nullable="false" />
+          <Property Name="DateID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Reservations">
+          <Key>
+            <PropertyRef Name="ReservationID" />
+          </Key>
+          <Property Name="ReservationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" />
+          <Property Name="GuestCount" Type="int" Nullable="false" />
+          <Property Name="AmountPaid" Type="decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="FullName" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="EmailAddress" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="PhoneNumber" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="TransactionID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TransactionLog">
+          <Key>
+            <PropertyRef Name="TransactionID" />
+          </Key>
+          <Property Name="TransactionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Timestamp" Type="datetime" Nullable="false" />
+          <Property Name="CardNonce" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="IdempotencyKey" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Successful" Type="bit" Nullable="false" />
+          <Property Name="ReferenceKey" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ErrorMessage" Type="varchar(max)" />
+        </EntityType>
         <EntityType Name="Holds">
           <Key>
             <PropertyRef Name="HoldID" />
@@ -55,10 +101,55 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ReservationDates_Dates">
+          <End Role="Dates" Type="Self.Dates" Multiplicity="1" />
+          <End Role="ReservationDates" Type="Self.ReservationDates" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dates">
+              <PropertyRef Name="DateID" />
+            </Principal>
+            <Dependent Role="ReservationDates">
+              <PropertyRef Name="DateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReservationDates_Reservations">
+          <End Role="Reservations" Type="Self.Reservations" Multiplicity="1" />
+          <End Role="ReservationDates" Type="Self.ReservationDates" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reservations">
+              <PropertyRef Name="ReservationID" />
+            </Principal>
+            <Dependent Role="ReservationDates">
+              <PropertyRef Name="ReservationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reservations_TransactionLog">
+          <End Role="TransactionLog" Type="Self.TransactionLog" Multiplicity="1" />
+          <End Role="Reservations" Type="Self.Reservations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TransactionLog">
+              <PropertyRef Name="TransactionID" />
+            </Principal>
+            <Dependent Role="Reservations">
+              <PropertyRef Name="TransactionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="SalmonRiverModelStoreContainer">
           <EntitySet Name="Dates" EntityType="Self.Dates" Schema="headwaters" store:Type="Tables" />
           <EntitySet Name="Holidays" EntityType="Self.Holidays" Schema="headwaters" store:Type="Tables" />
+          <EntitySet Name="PricingModels" EntityType="Self.PricingModels" Schema="headwaters" store:Type="Tables" />
+          <EntitySet Name="Reservations" EntityType="Self.Reservations" Schema="headwaters" store:Type="Tables" />
+          <EntitySet Name="TransactionLog" EntityType="Self.TransactionLog" Schema="headwaters" store:Type="Tables" />
           <EntitySet Name="Holds" EntityType="Self.Holds" Schema="www_headwaters" store:Type="Tables" />
+          <EntitySet Name="ReservationDates" EntityType="Self.ReservationDates" store:Type="Tables" store:Schema="headwaters">
+            <DefiningQuery>SELECT 
+    [ReservationDates].[ReservationID] AS [ReservationID], 
+    [ReservationDates].[DateID] AS [DateID]
+    FROM [headwaters].[ReservationDates] AS [ReservationDates]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_Dates_Holidays" Association="Self.FK_Dates_Holidays">
             <End Role="Holidays" EntitySet="Holidays" />
             <End Role="Dates" EntitySet="Dates" />
@@ -66,6 +157,18 @@
           <AssociationSet Name="FK_Holds_Dates" Association="Self.FK_Holds_Dates">
             <End Role="Dates" EntitySet="Dates" />
             <End Role="Holds" EntitySet="Holds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReservationDates_Dates" Association="Self.FK_ReservationDates_Dates">
+            <End Role="Dates" EntitySet="Dates" />
+            <End Role="ReservationDates" EntitySet="ReservationDates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReservationDates_Reservations" Association="Self.FK_ReservationDates_Reservations">
+            <End Role="Reservations" EntitySet="Reservations" />
+            <End Role="ReservationDates" EntitySet="ReservationDates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reservations_TransactionLog" Association="Self.FK_Reservations_TransactionLog">
+            <End Role="TransactionLog" EntitySet="TransactionLog" />
+            <End Role="Reservations" EntitySet="Reservations" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -84,6 +187,17 @@
             <End Role="Date" EntitySet="Dates" />
             <End Role="Hold" EntitySet="Holds" />
           </AssociationSet>
+          <EntitySet Name="PricingModels" EntityType="SalmonRiverModel.PricingModel" />
+          <EntitySet Name="Reservations" EntityType="SalmonRiverModel.Reservation" />
+          <EntitySet Name="TransactionLogs" EntityType="SalmonRiverModel.TransactionLog" />
+          <AssociationSet Name="FK_Reservations_TransactionLog" Association="SalmonRiverModel.FK_Reservations_TransactionLog">
+            <End Role="TransactionLog" EntitySet="TransactionLogs" />
+            <End Role="Reservation" EntitySet="Reservations" />
+          </AssociationSet>
+          <AssociationSet Name="ReservationDates" Association="SalmonRiverModel.ReservationDates">
+            <End Role="Date" EntitySet="Dates" />
+            <End Role="Reservation" EntitySet="Reservations" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Date">
           <Key>
@@ -97,6 +211,7 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Holiday" Relationship="SalmonRiverModel.FK_Dates_Holidays" FromRole="Date" ToRole="Holiday" />
           <NavigationProperty Name="Holds" Relationship="SalmonRiverModel.FK_Holds_Dates" FromRole="Date" ToRole="Hold" />
+          <NavigationProperty Name="Reservations" Relationship="SalmonRiverModel.ReservationDates" FromRole="Date" ToRole="Reservation" />
         </EntityType>
         <EntityType Name="Holiday">
           <Key>
@@ -139,6 +254,61 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="PricingModel">
+          <Key>
+            <PropertyRef Name="PricingModelID" />
+          </Key>
+          <Property Name="PricingModelID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GuestCount" Type="Int32" Nullable="false" />
+          <Property Name="StayDate" Type="DateTime" Precision="0" />
+          <Property Name="StayCost" Type="Decimal" Precision="8" Scale="2" Nullable="false" />
+          <Property Name="Notes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Reservation">
+          <Key>
+            <PropertyRef Name="ReservationID" />
+          </Key>
+          <Property Name="ReservationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+          <Property Name="GuestCount" Type="Int32" Nullable="false" />
+          <Property Name="AmountPaid" Type="Decimal" Nullable="false" Precision="9" Scale="2" />
+          <Property Name="FullName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TransactionID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TransactionLog" Relationship="SalmonRiverModel.FK_Reservations_TransactionLog" FromRole="Reservation" ToRole="TransactionLog" />
+          <NavigationProperty Name="Dates" Relationship="SalmonRiverModel.ReservationDates" FromRole="Reservation" ToRole="Date" />
+        </EntityType>
+        <EntityType Name="TransactionLog">
+          <Key>
+            <PropertyRef Name="TransactionID" />
+          </Key>
+          <Property Name="TransactionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Timestamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CardNonce" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="IdempotencyKey" Type="Guid" Nullable="false" />
+          <Property Name="Successful" Type="Boolean" Nullable="false" />
+          <Property Name="ReferenceKey" Type="Guid" Nullable="false" />
+          <Property Name="ErrorMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Reservations" Relationship="SalmonRiverModel.FK_Reservations_TransactionLog" FromRole="TransactionLog" ToRole="Reservation" />
+        </EntityType>
+        <Association Name="FK_Reservations_TransactionLog">
+          <End Type="SalmonRiverModel.TransactionLog" Role="TransactionLog" Multiplicity="1" />
+          <End Type="SalmonRiverModel.Reservation" Role="Reservation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TransactionLog">
+              <PropertyRef Name="TransactionID" />
+            </Principal>
+            <Dependent Role="Reservation">
+              <PropertyRef Name="TransactionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ReservationDates">
+          <End Type="SalmonRiverModel.Date" Role="Date" Multiplicity="*" />
+          <End Type="SalmonRiverModel.Reservation" Role="Reservation" Multiplicity="*" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -174,6 +344,53 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="PricingModels">
+            <EntityTypeMapping TypeName="SalmonRiverModel.PricingModel">
+              <MappingFragment StoreEntitySet="PricingModels">
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="StayCost" ColumnName="StayCost" />
+                <ScalarProperty Name="StayDate" ColumnName="StayDate" />
+                <ScalarProperty Name="GuestCount" ColumnName="GuestCount" />
+                <ScalarProperty Name="PricingModelID" ColumnName="PricingModelID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Reservations">
+            <EntityTypeMapping TypeName="SalmonRiverModel.Reservation">
+              <MappingFragment StoreEntitySet="Reservations">
+                <ScalarProperty Name="TransactionID" ColumnName="TransactionID" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
+                <ScalarProperty Name="GuestCount" ColumnName="GuestCount" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ReservationID" ColumnName="ReservationID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TransactionLogs">
+            <EntityTypeMapping TypeName="SalmonRiverModel.TransactionLog">
+              <MappingFragment StoreEntitySet="TransactionLog">
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ReferenceKey" ColumnName="ReferenceKey" />
+                <ScalarProperty Name="Successful" ColumnName="Successful" />
+                <ScalarProperty Name="IdempotencyKey" ColumnName="IdempotencyKey" />
+                <ScalarProperty Name="CardNonce" ColumnName="CardNonce" />
+                <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
+                <ScalarProperty Name="TransactionID" ColumnName="TransactionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="ReservationDates" TypeName="SalmonRiverModel.ReservationDates" StoreEntitySet="ReservationDates">
+            <EndProperty Name="Reservation">
+              <ScalarProperty Name="ReservationID" ColumnName="ReservationID" />
+            </EndProperty>
+            <EndProperty Name="Date">
+              <ScalarProperty Name="DateID" ColumnName="DateID" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

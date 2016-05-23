@@ -2,9 +2,18 @@
 
 @{
     ViewBag.Title = "Complete Reservation";
+    SalmonRiver.Models.SquareErrors squareErrors = ViewBag.SquareErrors as SalmonRiver.Models.SquareErrors;
 }
 
 @section scripts{
+    @if (squareErrors != null)
+    {
+        foreach (var squareError in squareErrors.errors)
+        {
+
+        }
+    }
+
     <script type="text/javascript">
         $('#CancelHold').click(function () {
             $.post('/Reserve/CancelTemporaryHold', {}, function (data, status, xhr) {
@@ -14,7 +23,7 @@
             });
         });
     </script>
-    <script type="text/javascript" src="http://js.squareup.com/v2/paymentform"></script>
+    <script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
 
     <script>
         var paymentForm = new SqPaymentForm({
@@ -80,14 +89,14 @@
                             }
 
                             if (error.type != 'VALIDATION_ERROR') {
-                                $('#AlertBox').innerHeight += '<div class="alert alert-warning alert-dismissible" role="alert" id="AlertBox"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-                                    '<div class="content">An error occurred while trying to prepare your payment. Please try again and if the problem persists please contact us.</div></div>';
+                                $('#AlertBox').html('<div class="alert alert-danger alert-dismissible" role="alert" id="AlertBox"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                                    '<div class="content">An error occurred while trying to prepare your payment. Please try again and if the problem persists please contact us.</div></div>');
                             }
                         });
                     } else {
                         // handle nonce
-                        console.log('Nonce received:');
-                        console.log(nonce);
+                        $('#CardNonce').val(nonce);
+                        $("form").submit();
                     }
                 },
                 unsupportedBrowserDetected: function () {
@@ -97,15 +106,23 @@
         });
 
         function requestCardNonce() {
-            $('.validation-sq').addClass('hidden');
-            $('.form-control-feedback').addClass('glyphicon-ok');
-            $('.form-control-feedback').removeClass('glyphicon-remove');
-            $('.has-feedback').removeClass('has-error');
-            $('.has-feedback').addClass('has-success');
+            $('.billing-information .validation-sq').addClass('hidden');
+            $('.billing-information .form-control-feedback').addClass('glyphicon-ok');
+            $('.billing-information .form-control-feedback').removeClass('glyphicon-remove');
+            $('.billing-information .has-feedback').removeClass('has-error');
+            $('.billing-information .has-feedback').addClass('has-success');
 
             paymentForm.requestCardNonce();
             return false;
         }
+
+        $(function () {
+            $('.input-validation-error').each(function () {
+                $(this).parent().addClass('has-error');
+                $(this).siblings('.field-validation-error').addClass('text-danger');
+                $(this).siblings('.glyphicon').addClass('glyphicon-remove');
+            });
+        });
     </script>
 }
 
@@ -163,7 +180,24 @@ else
     <div class="container main-content">
         @using (Html.BeginForm())
         {
-            @Html.AntiForgeryToken();
+            @Html.AntiForgeryToken()
+
+            for (int i = 0; i < Model.Holds.Count; i++)
+            {
+                @Html.HiddenFor(m => m.Holds[i].DateID)
+                @Html.HiddenFor(m => m.Holds[i].Expiration)
+                @Html.HiddenFor(m => m.Holds[i].HoldID)
+                @Html.HiddenFor(m => m.Holds[i].Date.Date1)
+                @Html.HiddenFor(m => m.Holds[i].Date.CheckIn)
+                @Html.HiddenFor(m => m.Holds[i].Date.CheckOut)
+                @Html.HiddenFor(m => m.Holds[i].Date.DateID)
+                @Html.HiddenFor(m => m.Holds[i].Date.Holiday.Holiday1)
+                @Html.HiddenFor(m => m.Holds[i].Date.IsActive)
+            }
+            @Html.HiddenFor(i => i.GuestCount)
+            
+            @Html.Hidden("CardNonce");
+
             <div class="row">
                 <div class="col-sm-12">
                     <div class="alert alert-success" role="alert">
@@ -180,10 +214,10 @@ else
                 <div class="col-xs-8 col-sm-6">
                     <div class="row">
                         <div class="col-sm-12 checkin">
-                            <div class="panel panel-default">
+                            <div class="panel panel-default" style="background-color: #dff0d8;">
                                 <div class="panel-body col-sm-6 col-md-4 text-center dateinfo">
-                                    <div class="date text-center">Wednesday, June 1</div>
-                                    <div class="time text-center">11:00 am</div>
+                                    <div class="date text-center">@Model.Holds.Min(i=>i.Date.Date1).ToString("ddd, MMMM d")</div>
+                                    <div class="time text-center">@Model.Holds.OrderBy(i=>i.Date.Date1).First().Date.CheckIn.ToString("h:mm tt")</div>
                                 </div>
                                 <div class="panel-body col-sm-6 col-md-8 description text-center">Check In</div>
                                 <div style="clear: both;"></div>
@@ -191,10 +225,10 @@ else
                         </div>
 
                         <div class="col-sm-12 checkout">
-                            <div class="panel panel-default">
+                            <div class="panel panel-default" style="background-color: #f2dede">
                                 <div class="panel-body col-sm-6 col-md-4 text-center dateinfo">
-                                    <div class="date text-center">Friday, June 3</div>
-                                    <div class="time text-center">11:00 am</div>
+                                    <div class="date text-center">@Model.Holds.Max(i => i.Date.Date1).AddDays(1).ToString("ddd, MMMM d")</div>
+                                    <div class="time text-center">@Model.Holds.OrderByDescending(i => i.Date.Date1).First().Date.CheckOut.ToString("h:mm tt")</div>
                                 </div>
                                 <div class="panel-body col-sm-6 col-md-8 description text-center">Check Out</div>
                                 <div style="clear: both;"></div>
@@ -208,16 +242,16 @@ else
                         <div class="panel-body">
                             <dl class="dl-horizontal details-of-stay">
                                 <dt># of Guests:</dt>
-                                <dd>3</dd>
-
-                                <dt>Price Per Night:</dt>
-                                <dd>$125</dd>
+                                <dd>@Model.GuestCount</dd>
 
                                 <dt>Length of Stay:</dt>
-                                <dd>6 nights</dd>
+                                <dd>@(Model.Holds.Count() == 1 ? "1 night" : Model.Holds.Count() + " nights")</dd>
+
+                                <dt>Price Per Night:</dt>
+                                <dd>@((Model.TotalCost / Model.Holds.Count()).ToString("C"))</dd>
 
                                 <dt>Total Cost:</dt>
-                                <dd>$459.00</dd>
+                                <dd>@(Model.TotalCost.ToString("C"))</dd>
                             </dl>
                         </div>
                     </div>
@@ -232,17 +266,23 @@ else
                 <div class="col-xs-12">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <div class="form-group">
+                            <div class="form-group has-feedback">
                                 <label for="FullName">Full Name</label>
-                                <input type="text" class="form-control" id="FullName">
+                                @Html.TextBoxFor(i => i.FullName, new { @class = "form-control" })
+                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                                @Html.ValidationMessageFor(i => i.FullName)
                             </div>
-                            <div class="form-group">
+                            <div class="form-group has-feedback">
                                 <label for="EmailAddress">Email Address</label>
-                                <input type="email" class="form-control" id="EmailAddress">
+                                @Html.TextBoxFor(i => i.EmailAddress, new {@class="form-control" })
+                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                                @Html.ValidationMessageFor(i=>i.EmailAddress)
                             </div>
-                            <div class="form-group">
+                            <div class="form-group has-feedback">
                                 <label for="PhoneNumber">Phone Number</label>
-                                <input type="tel" class="form-control" id="PhoneNumber">
+                                @Html.TextBoxFor(i => i.PhoneNumber, new { @class = "form-control", @type = "tel" })
+                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                                @Html.ValidationMessageFor(i => i.PhoneNumber)
                             </div>
                         </div>
                     </div>
@@ -250,7 +290,7 @@ else
             </div>
 
 
-            <div class="row">
+            <div class="row billing-information">
                 <div class="col-sm-12">
                     <h2>Billing Information</h2>
                 </div>
@@ -258,12 +298,6 @@ else
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <label for="CardName">Name on Card</label>
-                                        <input type="text" class="form-control" id="CardName">
-                                    </div>
-                                </div>
                                 <div class="col-sm-8">
                                     <div class="form-group has-feedback card-number">
                                         <label for="CCNumber">Credit Card Number</label>
