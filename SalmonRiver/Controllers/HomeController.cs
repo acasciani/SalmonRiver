@@ -16,7 +16,8 @@ namespace SalmonRiver.Controllers
             DateTime expiration = DateTime.Now.ToUniversalTime();
             DateTime maxBookDate = DateTime.Today.AddMonths(6);
             List<DateTime> onHold = db.Holds.Where(i => expiration < i.Expiration).Select(i => i.Date.Date1).Distinct().ToList();
-            return db.Dates.Where(i => i.IsActive && i.Date1 >= DateTime.Today && i.Date1 <= maxBookDate && !onHold.Contains(i.Date1)).Select(i => i.Date1).Distinct().ToList();
+            List<DateTime> currentlyReserved = db.ReservationDates.Select(i => i.Date.Date1).Distinct().ToList();
+            return db.Dates.Where(i => i.IsActive && i.Date1 >= DateTime.Today && i.Date1 <= maxBookDate && !onHold.Contains(i.Date1) && !currentlyReserved.Contains(i.Date1)).Select(i => i.Date1).Distinct().ToList();
         }
 
         public ActionResult Index(int? error)

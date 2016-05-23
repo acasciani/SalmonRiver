@@ -17,7 +17,7 @@ namespace SalmonRiver
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Reservation()
         {
-            this.Dates = new HashSet<Date>();
+            this.ReservationDates = new HashSet<ReservationDate>();
         }
     
         public int ReservationID { get; set; }
@@ -32,6 +32,6 @@ namespace SalmonRiver
     
         public virtual TransactionLog TransactionLog { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Date> Dates { get; set; }
+        public virtual ICollection<ReservationDate> ReservationDates { get; set; }
     }
 }

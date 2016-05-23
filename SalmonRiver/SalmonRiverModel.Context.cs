@@ -31,5 +31,6 @@ namespace SalmonRiver
         public virtual DbSet<PricingModel> PricingModels { get; set; }
         public virtual DbSet<Reservation> Reservations { get; set; }
         public virtual DbSet<TransactionLog> TransactionLogs { get; set; }
+        public virtual DbSet<ReservationDate> ReservationDates { get; set; }
     }
 }

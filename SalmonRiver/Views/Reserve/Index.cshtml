@@ -3,16 +3,57 @@
 @{
     ViewBag.Title = "Complete Reservation";
     SalmonRiver.Models.SquareErrors squareErrors = ViewBag.SquareErrors as SalmonRiver.Models.SquareErrors;
+
+    List<string> expErrors = new List<string>() { "CARD_EXPIRED", "INVALID_EXPIRATION", "INVALID_EXPIRATION_YEAR", "INVALID_EXPIRATION_DATE" };
+    List<string> ccErrors = new List<string>() { "UNSUPPORTED_CARD_BRAND", "INVALID_CARD", "INVALID_CARD_DATA", "CARD_DECLINED", };
+    List<string> cvvErrors = new List<string>() { "VERIFY_CVV_FAILURE" };
+    List<string> avsErrors = new List<string>() { "VERIFY_AVS_FAILURE" };
+
+    List<string> generalErrors = squareErrors == null ? new List<string>() : squareErrors.errors.Where(i => !expErrors.Contains(i.code) && !ccErrors.Contains(i.code) && !cvvErrors.Contains(i.code) && !avsErrors.Contains(i.code)).Select(i => i.detail).ToList();
 }
 
 @section scripts{
-    @if (squareErrors != null)
-    {
-        foreach (var squareError in squareErrors.errors)
-        {
+@if (squareErrors != null)
+{
+    <script type="text/javascript">
+            @foreach (var squareError in squareErrors.errors)
+            {
+                string cardErrorJSCode = "$('{0} .validation-sq').removeClass('hidden');" +
+                                    "$('{0}').removeClass('has-success');" +
+                                    "$('{0}').addClass('has-error');" +
+                                    "$('{0} .form-control-feedback').removeClass('glyphicon-ok');" +
+                                    "$('{0} .form-control-feedback').addClass('glyphicon-remove');" +
+                                    "if ({1}) {{ $('{0} .validation-sq').text('{2}'); }}";
 
+                if (expErrors.Contains(squareError.code))
+                {
+                    //expiration error
+                    @Html.Raw(string.Format(cardErrorJSCode, ".expiration-date", string.IsNullOrWhiteSpace(squareError.detail) ? "false" : "true", squareError.detail))
+                }else
+                if (ccErrors.Contains(squareError.code))
+                {
+                    //card number error
+                    @Html.Raw(string.Format(cardErrorJSCode, ".card-number", string.IsNullOrWhiteSpace(squareError.detail) ? "false" : "true", squareError.detail))
+                }else
+
+                if (cvvErrors.Contains(squareError.code))
+                {
+                    //cvv validation error
+                    @Html.Raw(string.Format(cardErrorJSCode, ".cvv", string.IsNullOrWhiteSpace(squareError.detail) ? "false" : "true", squareError.detail))
+                }
+                else if (avsErrors.Contains(squareError.code))
+                {
+                    //postal validation error
+                    @Html.Raw(string.Format(cardErrorJSCode, ".postal-code", string.IsNullOrWhiteSpace(squareError.detail) ? "false" : "true", squareError.detail))
+                }
+            }
+
+        if (generalErrors.Count() > 0) {
+            @Html.Raw("$('#AlertBox').html(\"<div class='alert alert-danger alert-dismissible' role='alert' id='AlertBox'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>'" +
+                    "<div class='content'>An error occurred while trying to prepare your payment. Please try again and if the problem persists please contact us.</div></div>\");")
         }
-    }
+    </script>
+}
 
     <script type="text/javascript">
         $('#CancelHold').click(function () {
@@ -200,9 +241,7 @@ else
 
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="alert alert-success" role="alert">
-                        <strong>Confirmation and Payment</strong> - Your session will expire at @Model.Expires.ToLocalTime().ToString("h:mm tt"). After that you will no longer have first priority to the dates you selected, unless you rebook. Please confirm and proceed to process your payment.
-                    </div>
+                    <strong>Confirmation and Payment</strong> - Your session will expire at @Model.Expires.ToLocalTime().ToString("h:mm tt"). After that you will no longer have first priority to the dates you selected, unless you rebook. Please confirm and proceed to process your payment.
                 </div>
             </div>
 

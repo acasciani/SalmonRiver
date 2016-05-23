@@ -18,7 +18,7 @@ namespace SalmonRiver
         public Date()
         {
             this.Holds = new HashSet<Hold>();
-            this.Reservations = new HashSet<Reservation>();
+            this.ReservationDates = new HashSet<ReservationDate>();
         }
     
         public int DateID { get; set; }
@@ -32,6 +32,6 @@ namespace SalmonRiver
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Hold> Holds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Reservation> Reservations { get; set; }
+        public virtual ICollection<ReservationDate> ReservationDates { get; set; }
     }
 }

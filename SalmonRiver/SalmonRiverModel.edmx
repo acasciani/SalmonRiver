@@ -33,13 +33,11 @@
           <Property Name="StayCost" Type="decimal" Precision="8" Scale="2" Nullable="false" />
           <Property Name="Notes" Type="varchar" MaxLength="100" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'SalmonRiver.headwaters.ReservationDates' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ReservationDates">
           <Key>
-            <PropertyRef Name="ReservationID" />
-            <PropertyRef Name="DateID" />
+            <PropertyRef Name="ReservationDateID" />
           </Key>
+          <Property Name="ReservationDateID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ReservationID" Type="int" Nullable="false" />
           <Property Name="DateID" Type="int" Nullable="false" />
         </EntityType>
@@ -141,15 +139,10 @@ warning 6002: The table/view 'SalmonRiver.headwaters.ReservationDates' does not 
           <EntitySet Name="Dates" EntityType="Self.Dates" Schema="headwaters" store:Type="Tables" />
           <EntitySet Name="Holidays" EntityType="Self.Holidays" Schema="headwaters" store:Type="Tables" />
           <EntitySet Name="PricingModels" EntityType="Self.PricingModels" Schema="headwaters" store:Type="Tables" />
+          <EntitySet Name="ReservationDates" EntityType="Self.ReservationDates" Schema="headwaters" store:Type="Tables" />
           <EntitySet Name="Reservations" EntityType="Self.Reservations" Schema="headwaters" store:Type="Tables" />
           <EntitySet Name="TransactionLog" EntityType="Self.TransactionLog" Schema="headwaters" store:Type="Tables" />
           <EntitySet Name="Holds" EntityType="Self.Holds" Schema="www_headwaters" store:Type="Tables" />
-          <EntitySet Name="ReservationDates" EntityType="Self.ReservationDates" store:Type="Tables" store:Schema="headwaters">
-            <DefiningQuery>SELECT 
-    [ReservationDates].[ReservationID] AS [ReservationID], 
-    [ReservationDates].[DateID] AS [DateID]
-    FROM [headwaters].[ReservationDates] AS [ReservationDates]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK_Dates_Holidays" Association="Self.FK_Dates_Holidays">
             <End Role="Holidays" EntitySet="Holidays" />
             <End Role="Dates" EntitySet="Dates" />
@@ -194,9 +187,14 @@ warning 6002: The table/view 'SalmonRiver.headwaters.ReservationDates' does not 
             <End Role="TransactionLog" EntitySet="TransactionLogs" />
             <End Role="Reservation" EntitySet="Reservations" />
           </AssociationSet>
-          <AssociationSet Name="ReservationDates" Association="SalmonRiverModel.ReservationDates">
+          <EntitySet Name="ReservationDates" EntityType="SalmonRiverModel.ReservationDate" />
+          <AssociationSet Name="FK_ReservationDates_Dates" Association="SalmonRiverModel.FK_ReservationDates_Dates">
             <End Role="Date" EntitySet="Dates" />
+            <End Role="ReservationDate" EntitySet="ReservationDates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReservationDates_Reservations" Association="SalmonRiverModel.FK_ReservationDates_Reservations">
             <End Role="Reservation" EntitySet="Reservations" />
+            <End Role="ReservationDate" EntitySet="ReservationDates" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Date">
@@ -211,7 +209,7 @@ warning 6002: The table/view 'SalmonRiver.headwaters.ReservationDates' does not 
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Holiday" Relationship="SalmonRiverModel.FK_Dates_Holidays" FromRole="Date" ToRole="Holiday" />
           <NavigationProperty Name="Holds" Relationship="SalmonRiverModel.FK_Holds_Dates" FromRole="Date" ToRole="Hold" />
-          <NavigationProperty Name="Reservations" Relationship="SalmonRiverModel.ReservationDates" FromRole="Date" ToRole="Reservation" />
+          <NavigationProperty Name="ReservationDates" Relationship="SalmonRiverModel.FK_ReservationDates_Dates" FromRole="Date" ToRole="ReservationDate" />
         </EntityType>
         <EntityType Name="Holiday">
           <Key>
@@ -278,7 +276,7 @@ warning 6002: The table/view 'SalmonRiver.headwaters.ReservationDates' does not 
           <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="TransactionID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="TransactionLog" Relationship="SalmonRiverModel.FK_Reservations_TransactionLog" FromRole="Reservation" ToRole="TransactionLog" />
-          <NavigationProperty Name="Dates" Relationship="SalmonRiverModel.ReservationDates" FromRole="Reservation" ToRole="Date" />
+          <NavigationProperty Name="ReservationDates" Relationship="SalmonRiverModel.FK_ReservationDates_Reservations" FromRole="Reservation" ToRole="ReservationDate" />
         </EntityType>
         <EntityType Name="TransactionLog">
           <Key>
@@ -305,9 +303,39 @@ warning 6002: The table/view 'SalmonRiver.headwaters.ReservationDates' does not 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="ReservationDates">
-          <End Type="SalmonRiverModel.Date" Role="Date" Multiplicity="*" />
-          <End Type="SalmonRiverModel.Reservation" Role="Reservation" Multiplicity="*" />
+        <EntityType Name="ReservationDate">
+          <Key>
+            <PropertyRef Name="ReservationDateID" />
+          </Key>
+          <Property Name="ReservationDateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReservationID" Type="Int32" Nullable="false" />
+          <Property Name="DateID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Date" Relationship="SalmonRiverModel.FK_ReservationDates_Dates" FromRole="ReservationDate" ToRole="Date" />
+          <NavigationProperty Name="Reservation" Relationship="SalmonRiverModel.FK_ReservationDates_Reservations" FromRole="ReservationDate" ToRole="Reservation" />
+        </EntityType>
+        <Association Name="FK_ReservationDates_Dates">
+          <End Type="SalmonRiverModel.Date" Role="Date" Multiplicity="1" />
+          <End Type="SalmonRiverModel.ReservationDate" Role="ReservationDate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Date">
+              <PropertyRef Name="DateID" />
+            </Principal>
+            <Dependent Role="ReservationDate">
+              <PropertyRef Name="DateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReservationDates_Reservations">
+          <End Type="SalmonRiverModel.Reservation" Role="Reservation" Multiplicity="1" />
+          <End Type="SalmonRiverModel.ReservationDate" Role="ReservationDate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reservation">
+              <PropertyRef Name="ReservationID" />
+            </Principal>
+            <Dependent Role="ReservationDate">
+              <PropertyRef Name="ReservationID" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -383,14 +411,15 @@ warning 6002: The table/view 'SalmonRiver.headwaters.ReservationDates' does not 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="ReservationDates" TypeName="SalmonRiverModel.ReservationDates" StoreEntitySet="ReservationDates">
-            <EndProperty Name="Reservation">
-              <ScalarProperty Name="ReservationID" ColumnName="ReservationID" />
-            </EndProperty>
-            <EndProperty Name="Date">
-              <ScalarProperty Name="DateID" ColumnName="DateID" />
-            </EndProperty>
-          </AssociationSetMapping>
+          <EntitySetMapping Name="ReservationDates">
+            <EntityTypeMapping TypeName="SalmonRiverModel.ReservationDate">
+              <MappingFragment StoreEntitySet="ReservationDates">
+                <ScalarProperty Name="DateID" ColumnName="DateID" />
+                <ScalarProperty Name="ReservationID" ColumnName="ReservationID" />
+                <ScalarProperty Name="ReservationDateID" ColumnName="ReservationDateID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

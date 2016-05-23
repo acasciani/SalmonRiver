@@ -248,6 +248,9 @@
     <Compile Include="Reservation.cs">
       <DependentUpon>SalmonRiverModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ReservationDate.cs">
+      <DependentUpon>SalmonRiverModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="SalmonRiverModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -99,12 +99,12 @@ namespace SalmonRiver.Controllers
 
                     SquareErrors charged = ChargeNonce(locationID, tempReservation.CardNonce, tempReservation.TotalCost, idempotencyKey);
 
-                    if (charged.errors.Count() > 0)
+                    if (charged.errors != null && charged.errors.Count() > 0)
                     {
                         // check if nonce was already used (like a page refresh)
                         if (charged.errors.Count(i => i.code == "CARD_TOKEN_USED") > 0)
                         {
-                            return View(tempReservation);
+                            return RedirectToAction("Index");
                         }
 
                         ViewBag.SquareErrors = charged;
@@ -135,9 +135,12 @@ namespace SalmonRiver.Controllers
 
                         List<int> dateIDs = tempReservation.Holds.Select(i => i.DateID).Distinct().ToList();
                         var dates = db.Dates.Where(i => dateIDs.Contains(i.DateID)).ToList();
-                        dates.ForEach(i => reservation.Dates.Add(i));
-                        log.Reservations.Add(reservation);
+                        dates.ForEach(i => reservation.ReservationDates.Add(new ReservationDate()
+                        {
+                            DateID = i.DateID
+                        }));
 
+                        log.Reservations.Add(reservation);
                         db.TransactionLogs.Add(log);
                         db.SaveChanges();
 
@@ -182,10 +185,13 @@ namespace SalmonRiver.Controllers
             request.AddHeader("Authorization", "Bearer " + SquareAccessToken);
             request.AddHeader("Accept", "application/json");
 
+            // the amount is in cents... see: http://stackoverflow.com/questions/37376062/submitting-a-charge-to-square-with-a-decimal-amount/
+            int amountInCents = Convert.ToInt32(decimal.Multiply(amount, 100M));
+
             string json = "{"+
                 "\"card_nonce\": \""+cardNonce+"\"," +
                 "\"amount_money\": {" +
-                "\"amount\": " + Convert.ToInt32(amount) + "," +
+                "\"amount\": " + amountInCents + "," +
                 "\"currency\": \"USD\"" + 
                 "},"+
                 "\"idempotency_key\": \"" + idempotencyKey.ToString() + "\"" +
