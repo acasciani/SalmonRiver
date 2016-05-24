@@ -37,6 +37,11 @@
             errorMessage = "The number of selected guests is invalid. Please select how many guests will be attending.";
             break;
             
+        case Errors.BookNow_EndDateExceedsMaxDate:
+            endDateError = true;
+            errorMessage = "The last visit date you specified is not available at this time. We currently only accept reservations up to 180 days in advance.";
+            break;
+            
         case Errors.BookNow_OtherError:
             guestsError = true;
             startDateError = true;
@@ -60,25 +65,34 @@
     <script src="/Scripts/custom/HeaderNavBar.js"></script>
 
     <script>
-        var availableDates = [];
-        @foreach (var availableDate in ViewBag.AvailableDates)
+            var isMobile = $(window).width() <= 480 || Modernizr.touch;
+
+            if (isMobile) {
+                $('#startDate > .form-control').attr('type', 'date');
+                $('#endDate > .form-control').attr('type', 'date');
+                $('#startDate > .input-group-addon').hide();
+                $('#endDate > .input-group-addon').hide();
+            } else {
+                var availableDates = [];
+                @foreach (var availableDate in ViewBag.AvailableDates)
         {
             @:availableDates.push("@string.Format("{0:MM/dd/yyyy}", availableDate)");
-        }
+                                        }
 
-        $('#startDate').datetimepicker({ format: 'MM/DD/YYYY', enabledDates: availableDates });
-        $('#endDate').datetimepicker({
-            useCurrent: false, //Important! See issue #1075
-            format: 'MM/DD/YYYY',
-            enabledDates: availableDates
-        });
+                $('#startDate').datetimepicker({ format: 'MM/DD/YYYY', enabledDates: availableDates });
+                $('#endDate').datetimepicker({
+                    useCurrent: false, //Important! See issue #1075
+                    format: 'MM/DD/YYYY',
+                    enabledDates: availableDates
+                });
 
-        $("#startDate").on("dp.change", function (e) {
-            $('#endDate').data("DateTimePicker").minDate(e.date);
-        });
-        $("#endDate").on("dp.change", function (e) {
-            $('#startDate').data("DateTimePicker").maxDate(e.date);
-        });
+                $("#startDate").on("dp.change", function (e) {
+                    $('#endDate').data("DateTimePicker").minDate(e.date);
+                });
+                $("#endDate").on("dp.change", function (e) {
+                    $('#startDate').data("DateTimePicker").maxDate(e.date);
+                });
+            }
     </script>
 
 }

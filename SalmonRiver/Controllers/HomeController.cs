@@ -65,10 +65,10 @@ namespace SalmonRiver.Controllers
 
                     DateTime expiration = DateTime.Now.ToUniversalTime();
 
-
+                    var currentlyReserved = db.ReservationDates.Where(i => requiredDates.Contains(i.Date.Date1)).Select(i => i.Date.Date1).Distinct().Count();
                     var check = db.Holds.Where(i => requiredDates.Contains(i.Date.Date1) && expiration <= i.Expiration).Count();
 
-                    if (check > 0)
+                    if (check > 0 || currentlyReserved > 0)
                     {
                         // one or more of the days selected is already being held
                         ViewBag.ErrorCode = Errors.BookNow_SelectedDatesOnHold;

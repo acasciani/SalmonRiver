@@ -17,6 +17,7 @@ namespace SalmonRiver.Controllers
 {
     public class ReserveController : Controller
     {
+        public const int MaxDaysFromNowToReserve = 180;
         public const int HoldLength = 15; // minutes
         private static string _SquareEndpoint = null;
         private static string _SquareAccessToken = null;
@@ -257,6 +258,13 @@ namespace SalmonRiver.Controllers
             if (model.Guests < 1 || model.Guests > 6)
             {
                 return Errors.BookNow_InvalidGuestSelection;
+            }
+
+            // make sure they do not select a date that is not currently available
+            DateTime maxDate = DateTime.Today.AddDays(MaxDaysFromNowToReserve);
+            if (model.End > maxDate)
+            {
+                return Errors.BookNow_EndDateExceedsMaxDate;
             }
 
             return null;

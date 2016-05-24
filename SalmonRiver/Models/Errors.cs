@@ -12,6 +12,7 @@ namespace SalmonRiver
         BookNow_SelectedDatesOnHold = 3,
         BookNow_InvalidGuestSelection = 4,
         BookNow_OtherError = 5,
-        Reserve_BookNowSessionExpired = 6
+        Reserve_BookNowSessionExpired = 6,
+        BookNow_EndDateExceedsMaxDate = 7
     }
 }

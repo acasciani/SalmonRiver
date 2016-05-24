@@ -111,12 +111,48 @@ footer {
     .booknow  {
         z-index: 1;
         opacity: 1;
-        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=2500');
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=650');
         background-repeat: no-repeat;
         background-size: cover;
         background-position-x:center;
         background-position-y:55%;
     }
+
+@media screen and (min-width: 2200px) {
+    .booknow {
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5');
+    }
+}
+
+@media screen and (min-width: 1800px) and (max-width: 2199px) {
+    .booknow {
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=2400');
+    }
+}
+
+@media screen and (min-width: 1400px) and (max-width: 1799px) {
+    .booknow {
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=2000');
+    }
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1399px) {
+    .booknow {
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=1600');
+    }
+}
+
+@media screen and (min-width: 800px) and (max-width: 999px) {
+    .booknow {
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=1200');
+    }
+}
+
+@media screen and (min-width: 480px) and (max-width: 799px) {
+    .booknow {
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=800');
+    }
+}
 
 .navbar-inner {
     min-height: 0px;

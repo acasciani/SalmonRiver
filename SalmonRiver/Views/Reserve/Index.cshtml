@@ -164,6 +164,12 @@
                 $(this).siblings('.glyphicon').addClass('glyphicon-remove');
             });
         });
+
+        @if(Model != null){
+            @Html.Raw("var localTime = moment.utc('" + Model.Expires.ToString("yyyy-MM-dd HH:mm:ss") + "').toDate();")
+            @Html.Raw("localTime = moment(localTime).format('h:mm A');")
+            @Html.Raw("$('.session-expires').text(localTime);")
+        }
     </script>
 }
 
@@ -241,7 +247,8 @@ else
 
             <div class="row">
                 <div class="col-sm-12">
-                    <strong>Confirmation and Payment</strong> - Your session will expire at @Model.Expires.ToLocalTime().ToString("h:mm tt"). After that you will no longer have first priority to the dates you selected, unless you rebook. Please confirm and proceed to process your payment.
+
+                    <strong>Confirmation and Payment</strong> - Your session will expire at <span class="session-expires">N/A</span>. After that you will no longer have first priority to the dates you selected, unless you rebook. Please confirm and proceed to process your payment.
                 </div>
             </div>
 
