@@ -8,6 +8,7 @@ Check-In: @(ViewBag.CheckIn as DateTime? == null ? "N/A" : (ViewBag.CheckIn as D
 Check-Out: @(ViewBag.CheckOut as DateTime? == null ? "N/A" : (ViewBag.CheckOut as DateTime?).Value.ToString("dddd, MMMM d, yyyy - h:mm tt"))
 Guests: @ViewBag.GuestCount
 Total Cost: @ViewBag.TotalCost
+Security Deposit: @ViewBag.SecurityDeposit
 Reference #: @ViewBag.ReferenceNumber
 
 If you have any questions, please contact me.

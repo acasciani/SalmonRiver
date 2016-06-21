@@ -19,5 +19,6 @@ namespace SalmonRiver
         public Nullable<System.DateTime> StayDate { get; set; }
         public decimal StayCost { get; set; }
         public string Notes { get; set; }
+        public decimal SecurityDeposit { get; set; }
     }
 }

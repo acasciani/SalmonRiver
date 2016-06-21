@@ -62,6 +62,8 @@ namespace SalmonRiver.Models
 
         public decimal TotalCost { get; private set; }
 
+        public decimal SecurityDeposit { get; private set; }
+
 
         #region contact info
         [Required(AllowEmptyStrings=false, ErrorMessage="Please enter your first and last name.")]
@@ -110,6 +112,7 @@ namespace SalmonRiver.Models
             if (GuestCount == 0 || Holds == null)
             {
                 TotalCost = 0;
+                SecurityDeposit = 0;
                 return;
             }
 
@@ -123,19 +126,31 @@ namespace SalmonRiver.Models
                 Dictionary<DateTime, PricingModel> allPricingForDates = db.PricingModels.Where(i => i.GuestCount == GuestCount && i.StayDate.HasValue && selectedDates.Contains(i.StayDate.Value)).ToDictionary(i => i.StayDate.Value);
 
                 decimal totalCost = 0;
+                decimal securityDeposit = 0;
                 foreach (DateTime selectedDate in selectedDates)
                 {
                     if (allPricingForDates.ContainsKey(selectedDate))
                     {
                         totalCost += allPricingForDates[selectedDate].StayCost;
+
+                        if (allPricingForDates[selectedDate].SecurityDeposit > securityDeposit)
+                        {
+                            securityDeposit = allPricingForDates[selectedDate].SecurityDeposit;
+                        }
                     }
                     else
                     {
                         totalCost += defaultPrice.StayCost;
+
+                        if (defaultPrice.SecurityDeposit > securityDeposit)
+                        {
+                            securityDeposit = defaultPrice.SecurityDeposit;
+                        }
                     }
                 }
 
                 TotalCost = totalCost;
+                SecurityDeposit = securityDeposit;
             }
         }
     }

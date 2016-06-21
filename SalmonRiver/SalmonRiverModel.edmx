@@ -32,6 +32,7 @@
           <Property Name="StayDate" Type="date" />
           <Property Name="StayCost" Type="decimal" Precision="8" Scale="2" Nullable="false" />
           <Property Name="Notes" Type="varchar" MaxLength="100" />
+          <Property Name="SecurityDeposit" Type="decimal" Precision="8" Scale="2" Nullable="false" />
         </EntityType>
         <EntityType Name="ReservationDates">
           <Key>
@@ -261,6 +262,7 @@
           <Property Name="StayDate" Type="DateTime" Precision="0" />
           <Property Name="StayCost" Type="Decimal" Precision="8" Scale="2" Nullable="false" />
           <Property Name="Notes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SecurityDeposit" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
         </EntityType>
         <EntityType Name="Reservation">
           <Key>
@@ -375,6 +377,7 @@
           <EntitySetMapping Name="PricingModels">
             <EntityTypeMapping TypeName="SalmonRiverModel.PricingModel">
               <MappingFragment StoreEntitySet="PricingModels">
+                <ScalarProperty Name="SecurityDeposit" ColumnName="SecurityDeposit" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="StayCost" ColumnName="StayCost" />
                 <ScalarProperty Name="StayDate" ColumnName="StayDate" />

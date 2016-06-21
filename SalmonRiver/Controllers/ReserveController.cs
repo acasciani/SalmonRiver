@@ -99,7 +99,7 @@ namespace SalmonRiver.Controllers
                     // everything is valid, charge the person
                     var locationID = ObtainSquareLocationID();
 
-                    SquareErrors charged = ChargeNonce(locationID, tempReservation.CardNonce, tempReservation.TotalCost, idempotencyKey);
+                    SquareErrors charged = ChargeNonce(locationID, tempReservation.CardNonce, tempReservation.SecurityDeposit, idempotencyKey);
 
                     if (charged.errors != null && charged.errors.Count() > 0)
                     {
@@ -127,7 +127,7 @@ namespace SalmonRiver.Controllers
 
                         Reservation reservation = new Reservation()
                         {
-                            AmountPaid = tempReservation.TotalCost,
+                            AmountPaid = tempReservation.SecurityDeposit,
                             CreateDate = DateTime.UtcNow,
                             EmailAddress = tempReservation.EmailAddress,
                             FullName = tempReservation.FullName,
@@ -153,7 +153,8 @@ namespace SalmonRiver.Controllers
                         email.CheckIn = reservation.ReservationDates.OrderBy(i => i.Date.Date1).First().Date.CheckIn;
                         email.CheckOut = reservation.ReservationDates.OrderByDescending(i => i.Date.Date1).First().Date.CheckOut;
                         email.GuestCount = reservation.GuestCount;
-                        email.TotalCost = reservation.AmountPaid.ToString("C");
+                        email.TotalCost = tempReservation.TotalCost.ToString("C");
+                        email.SecurityDeposit = reservation.AmountPaid.ToString("C");
                         email.ReferenceNumber = reservation.TransactionLog.ReferenceKey;
                         email.Send();
 

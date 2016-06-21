@@ -26,6 +26,7 @@
                                         <br><strong>Check-Out:</strong> @(ViewBag.CheckOut as DateTime? == null ? "N/A" : (ViewBag.CheckOut as DateTime?).Value.ToString("dddd, MMMM d, yyyy - h:mm tt"))
                                         <br><strong>Guests:</strong> @ViewBag.GuestCount
                                         <br><strong>Total Cost:</strong> @ViewBag.TotalCost
+                                        <br><strong>Security Deposit:</strong> @ViewBag.SecurityDeposit
                                         <br><strong>Reference #:</strong> @ViewBag.ReferenceNumber
                                     </p>
 
