@@ -20,5 +20,6 @@ namespace SalmonRiver
         public decimal StayCost { get; set; }
         public string Notes { get; set; }
         public decimal SecurityDeposit { get; set; }
+        public Nullable<decimal> WeeklyRate { get; set; }
     }
 }

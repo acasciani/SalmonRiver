@@ -42,6 +42,22 @@
             errorMessage = "The last visit date you specified is not available at this time. We currently only accept reservations up to 180 days in advance.";
             break;
             
+        case Errors.BookNow_FirstDayMustBeSaturday:
+            startDateError = true;
+            errorMessage = "The checkin date must be Saturday.";
+            break;
+            
+        case Errors.BookNow_LastDayMustBeFriday:
+            endDateError = true;
+            errorMessage = "The checkout date must be Saturday.";
+            break;
+            
+        case Errors.BookNow_LengthMustBeSevenDays:
+            startDateError = true;
+            endDateError = true;
+            errorMessage = "The duration of your stay may only be one week.";
+            break;
+            
         case Errors.BookNow_OtherError:
             guestsError = true;
             startDateError = true;
@@ -79,11 +95,12 @@
             @:availableDates.push("@string.Format("{0:MM/dd/yyyy}", availableDate)");
                                         }
 
-                $('#startDate').datetimepicker({ format: 'MM/DD/YYYY', enabledDates: availableDates });
+                $('#startDate').datetimepicker({ useCurrent: false, format: 'MM/DD/YYYY', enabledDates: availableDates, daysOfWeekDisabled: [0, 1, 2, 3, 4, 5] });
                 $('#endDate').datetimepicker({
                     useCurrent: false, //Important! See issue #1075
                     format: 'MM/DD/YYYY',
-                    enabledDates: availableDates
+                    enabledDates: availableDates,
+                    daysOfWeekDisabled: [0, 1, 2, 3, 4, 5]
                 });
 
                 $("#startDate").on("dp.change", function (e) {
@@ -174,7 +191,7 @@
         <div class="col-sm-8">
             <h1>Headwaters Cabins at the Salmon River</h1>
             <p>Just steps from the headwaters of the Salmon River enjoy your stay in this new cabin that sleeps 4-6 and is fully equipped with all amenities. All amenities include new kitchen appliance, TV, bath and a half and gas stove for those chilly nights. The snowmobile trail is just around the corner and fishing access to the Salmon River is across the road at the headwaters.</p>
-            <p>This area has it all. Fishing, snowmobiling, hiking, ATV, kayaking, skiing or just a place to relax and enjoy nature. Located just outside the village of Altmar, New York this cabin is in the heart of Salomon fishing for the expert or the novice!</p>
+            <p>This area has it all. Stream trout fishing, snowmobiling, hiking, kayaking, skiing or just a place to relax and enjoy nature. Located just outside the village of Altmar, New York this cabin is in the heart of Salomon fishing for the expert or the novice!</p>
             <p>And while you are here visit the Salmon River Fish Hatchery, the state’s largest hatchery, maintained by the Department of Environmental Conservation just down the road!</p>
         </div>
 

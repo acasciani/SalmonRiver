@@ -60,9 +60,29 @@ namespace SalmonRiver.Models
             }
         }
 
+        public int LengthOfStay
+        {
+            get
+            {
+                DateTime start = Holds.Min(i => i.Date.Date1);
+                DateTime end = Holds.Max(i => i.Date.Date1);
+
+                return Convert.ToInt32((end - start).TotalDays);
+            }
+        }
+
         public decimal TotalCost { get; private set; }
 
         public decimal SecurityDeposit { get; private set; }
+
+        public decimal AmountDue
+        {
+            get
+            {
+                // half the total cost and the security deposit is due on checkout
+                return Math.Round((TotalCost * .5M) + SecurityDeposit, 2);
+            }
+        }
 
 
         #region contact info
@@ -127,24 +147,36 @@ namespace SalmonRiver.Models
 
                 decimal totalCost = 0;
                 decimal securityDeposit = 0;
-                foreach (DateTime selectedDate in selectedDates)
+
+                if (LengthOfStay % 6 == 0 && defaultPrice.WeeklyRate.HasValue)
                 {
-                    if (allPricingForDates.ContainsKey(selectedDate))
-                    {
-                        totalCost += allPricingForDates[selectedDate].StayCost;
+                    // week length
+                    totalCost += defaultPrice.WeeklyRate.Value;
+                    securityDeposit += defaultPrice.SecurityDeposit;
+                }
+                else
+                {
+                    // non week length
 
-                        if (allPricingForDates[selectedDate].SecurityDeposit > securityDeposit)
+                    foreach (DateTime selectedDate in selectedDates)
+                    {
+                        if (allPricingForDates.ContainsKey(selectedDate))
                         {
-                            securityDeposit = allPricingForDates[selectedDate].SecurityDeposit;
+                            totalCost += allPricingForDates[selectedDate].StayCost;
+
+                            if (allPricingForDates[selectedDate].SecurityDeposit > securityDeposit)
+                            {
+                                securityDeposit = allPricingForDates[selectedDate].SecurityDeposit;
+                            }
                         }
-                    }
-                    else
-                    {
-                        totalCost += defaultPrice.StayCost;
-
-                        if (defaultPrice.SecurityDeposit > securityDeposit)
+                        else
                         {
-                            securityDeposit = defaultPrice.SecurityDeposit;
+                            totalCost += defaultPrice.StayCost;
+
+                            if (defaultPrice.SecurityDeposit > securityDeposit)
+                            {
+                                securityDeposit = defaultPrice.SecurityDeposit;
+                            }
                         }
                     }
                 }

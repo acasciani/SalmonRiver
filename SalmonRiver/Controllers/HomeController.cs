@@ -42,7 +42,9 @@ namespace SalmonRiver.Controllers
                     List<DateTime> requiredDates = new List<DateTime>();
 
                     DateTime startRef = bookNow.Start.Date;
-                    while (startRef <= bookNow.End)
+
+                    // Don't want to do last date, since the checkout data is set to the following day.
+                    while (startRef < bookNow.End)
                     {
                         requiredDates.Add(startRef);
                         startRef = startRef.AddDays(1);

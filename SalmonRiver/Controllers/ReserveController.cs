@@ -99,7 +99,7 @@ namespace SalmonRiver.Controllers
                     // everything is valid, charge the person
                     var locationID = ObtainSquareLocationID();
 
-                    SquareErrors charged = ChargeNonce(locationID, tempReservation.CardNonce, tempReservation.SecurityDeposit, idempotencyKey);
+                    SquareErrors charged = ChargeNonce(locationID, tempReservation.CardNonce, tempReservation.AmountDue, idempotencyKey);
 
                     if (charged.errors != null && charged.errors.Count() > 0)
                     {
@@ -127,7 +127,7 @@ namespace SalmonRiver.Controllers
 
                         Reservation reservation = new Reservation()
                         {
-                            AmountPaid = tempReservation.SecurityDeposit,
+                            AmountPaid = tempReservation.AmountDue,
                             CreateDate = DateTime.UtcNow,
                             EmailAddress = tempReservation.EmailAddress,
                             FullName = tempReservation.FullName,
@@ -154,7 +154,8 @@ namespace SalmonRiver.Controllers
                         email.CheckOut = reservation.ReservationDates.OrderByDescending(i => i.Date.Date1).First().Date.CheckOut;
                         email.GuestCount = reservation.GuestCount;
                         email.TotalCost = tempReservation.TotalCost.ToString("C");
-                        email.SecurityDeposit = reservation.AmountPaid.ToString("C");
+                        email.SecurityDeposit = tempReservation.SecurityDeposit.ToString("C");
+                        email.AmountPaid = reservation.AmountPaid.ToString();
                         email.ReferenceNumber = reservation.TransactionLog.ReferenceKey;
                         email.Send();
 
@@ -266,6 +267,23 @@ namespace SalmonRiver.Controllers
             if (model.End > maxDate)
             {
                 return Errors.BookNow_EndDateExceedsMaxDate;
+            }
+
+            if (model.Start.DayOfWeek != DayOfWeek.Saturday)
+            {
+                return Errors.BookNow_FirstDayMustBeSaturday;
+            }
+
+            if (model.End.DayOfWeek != DayOfWeek.Saturday)
+            {
+                return Errors.BookNow_LastDayMustBeFriday;
+            }
+
+            double lengthOfReservation = (model.End - model.Start).TotalDays;
+
+            if (lengthOfReservation % 7 != 0 || lengthOfReservation == 0)
+            {
+                return Errors.BookNow_LengthMustBeSevenDays;
             }
 
             return null;
