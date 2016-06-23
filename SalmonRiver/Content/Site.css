@@ -154,6 +154,23 @@ footer {
     }
 }
 
+
+@media screen and (min-width:768px) {
+    .panel .hotlinks {
+        height: 250px;
+    }
+}
+
+@media screen and (max-width:767px) {
+    .panel .hotlinks {
+        width: 100%;
+    }
+}
+
+.panel .hotlinks {
+    visibility: hidden;
+}
+
 .navbar-inner {
     min-height: 0px;
 }

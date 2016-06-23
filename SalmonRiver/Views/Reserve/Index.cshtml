@@ -350,7 +350,7 @@ else
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-sm-5 col-xs-6">
                                     <div class="form-group has-feedback card-number">
                                         <label for="CCNumber">Credit Card Number</label>
                                         <div id="sq-card-number"></div>
@@ -359,7 +359,17 @@ else
                                         <span class="text-danger hidden validation-sq">An error occurred with your card number.</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
+
+                                <div class="col-sm-4 col-xs-6">
+                                    <div class="">
+                                        <label for="CCNumber">&nbsp;</label>
+                                        <div>
+                                            <img src="~/Content/images/visa.png" alt="Visa" title="Visa" height="32" /> <img src="~/Content/images/mastercard.png" alt="MasterCard" title="MasterCard" height="32" /> <img src="~/Content/images/amex.png" height="32" alt="American Express" title="American Express" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3 col-xs-12">
                                     <div class="form-group has-feedback cvv">
                                         <label for="CVV2">CVV</label>
                                         <div id="sq-cvv"></div>
@@ -369,7 +379,7 @@ else
                                     </div>
                                 </div>
 
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 col-xs-12">
                                     <div class="form-group has-feedback expiration-date">
                                         <label for="ExpirationMonth">Expiration Date</label>
                                         <div id="sq-expiration-date"></div>
@@ -378,7 +388,7 @@ else
                                         <span class="text-danger hidden validation-sq">An error occurred with your card's expiration date.</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 col-xs-12">
                                     <div class="form-group has-feedback postal-code">
                                         <label for="sq-postal-code">Postal Code</label>
 
