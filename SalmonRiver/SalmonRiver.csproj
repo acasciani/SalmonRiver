@@ -291,7 +291,6 @@
     <Content Include="Content\images\amex.png" />
     <Content Include="Content\images\booknow.jpg" />
     <Content Include="Content\images\front1.jpg" />
-    <Content Include="Content\images\front2.jpg" />
     <Content Include="Content\images\front4.jpg" />
     <Content Include="Content\images\gallery\fish-size.jpg" />
     <Content Include="Content\images\gallery\nature.jpg" />
@@ -301,6 +300,7 @@
     <Content Include="Content\images\gallery\water.jpg" />
     <Content Include="Content\images\gallery\waterfall.jpg" />
     <Content Include="Content\images\hiking.jpg" />
+    <Content Include="Content\images\front2.png" />
     <Content Include="Content\images\kayaking.jpg" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\logo.png" />
