@@ -290,8 +290,8 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\images\amex.png" />
     <Content Include="Content\images\booknow.jpg" />
-    <Content Include="Content\images\front1.jpg" />
-    <Content Include="Content\images\front4.jpg" />
+    <Content Include="Content\images\front1.png" />
+    <Content Include="Content\images\front3.png" />
     <Content Include="Content\images\gallery\fish-size.jpg" />
     <Content Include="Content\images\gallery\nature.jpg" />
     <Content Include="Content\images\gallery\salmon-river-fish-hatchery.JPG" />

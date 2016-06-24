@@ -111,7 +111,7 @@ footer {
     .booknow  {
         z-index: 1;
         opacity: 1;
-        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=650');
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=650&quality=40');
         background-repeat: no-repeat;
         background-size: cover;
         background-position-x:center;
@@ -120,37 +120,37 @@ footer {
 
 @media screen and (min-width: 2200px) {
     .booknow {
-        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5');
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&quality=40');
     }
 }
 
 @media screen and (min-width: 1800px) and (max-width: 2199px) {
     .booknow {
-        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=2400');
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=2400&quality=40');
     }
 }
 
 @media screen and (min-width: 1400px) and (max-width: 1799px) {
     .booknow {
-        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=2000');
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=2000&quality=40');
     }
 }
 
 @media screen and (min-width: 1000px) and (max-width: 1399px) {
     .booknow {
-        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=1600');
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=1600&quality=40');
     }
 }
 
 @media screen and (min-width: 800px) and (max-width: 999px) {
     .booknow {
-        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=1200');
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=1200&quality=40');
     }
 }
 
 @media screen and (min-width: 480px) and (max-width: 799px) {
     .booknow {
-        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=800');
+        background-image: url('/Content/images/booknow.jpg?s.sepia=true&s.alpha=.5&width=800&quality=40');
     }
 }
 
