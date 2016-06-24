@@ -48,8 +48,8 @@
                 }
             }
 
-        if (generalErrors.Count() > 0) {
-            @Html.Raw("$('#AlertBox').html(\"<div class='alert alert-danger alert-dismissible' role='alert' id='AlertBox'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>'" +
+        @if (generalErrors.Count() > 0) {
+            @Html.Raw("$('#AlertBox').html(\"<div class='alert alert-danger alert-dismissible' role='alert' id='AlertBox'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>" +
                     "<div class='content'>An error occurred while trying to prepare your payment. Please try again and if the problem persists please contact us.</div></div>\");")
         }
     </script>
@@ -68,7 +68,7 @@
 
     <script>
         var paymentForm = new SqPaymentForm({
-            applicationId: 'sandbox-sq0idp-0HutUDsnupbboc2BoBxPXQ', // <-- REQUIRED: Add Application ID
+            applicationId: 'sq0idp-0HutUDsnupbboc2BoBxPXQ', // <-- REQUIRED: Add Application ID
             inputClass: 'form-control',
             cardNumber: {
                 elementId: 'sq-card-number',
@@ -378,7 +378,8 @@ else
                                         <span class="text-danger hidden validation-sq">An error occurred with your card's CVV value.</span>
                                     </div>
                                 </div>
-
+                            </div>
+                            <div class="row">
                                 <div class="col-sm-6 col-xs-12">
                                     <div class="form-group has-feedback expiration-date">
                                         <label for="ExpirationMonth">Expiration Date</label>
