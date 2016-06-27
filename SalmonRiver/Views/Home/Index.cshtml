@@ -95,12 +95,13 @@
             @:availableDates.push("@string.Format("{0:MM/dd/yyyy}", availableDate)");
                                         }
 
-                $('#startDate').datetimepicker({ useCurrent: false, format: 'MM/DD/YYYY', enabledDates: availableDates, daysOfWeekDisabled: [0, 1, 2, 3, 4, 5] });
+                $('#startDate').datetimepicker({ useCurrent: false, format: 'MM/DD/YYYY', enabledDates: availableDates, daysOfWeekDisabled: [0, 1, 2, 3, 4, 5], minDate: '2016-09-01', viewDate: '2016-09-01' });
                 $('#endDate').datetimepicker({
                     useCurrent: false, //Important! See issue #1075
                     format: 'MM/DD/YYYY',
                     enabledDates: availableDates,
-                    daysOfWeekDisabled: [0, 1, 2, 3, 4, 5]
+                    daysOfWeekDisabled: [0, 1, 2, 3, 4, 5],
+                    minDate: '2016-09-01', viewDate: '2016-09-01'
                 });
 
                 $("#startDate").on("dp.change", function (e) {
