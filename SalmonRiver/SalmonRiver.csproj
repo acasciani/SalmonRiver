@@ -43,8 +43,16 @@
       <HintPath>..\packages\ImageResizer.4.0.5\lib\net45\ImageResizer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ImageResizer.Plugins.DiskCache, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ImageResizer.Plugins.DiskCache.4.0.5\lib\net45\ImageResizer.Plugins.DiskCache.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ImageResizer.Plugins.SimpleFilters, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ImageResizer.Plugins.SimpleFilters.4.0.5\lib\net45\ImageResizer.Plugins.SimpleFilters.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ImageResizer.Plugins.TinyCache, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ImageResizer.Plugins.TinyCache.4.0.5\lib\net45\ImageResizer.Plugins.TinyCache.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp">
@@ -293,6 +301,16 @@
     <Content Include="Content\images\front1.png" />
     <Content Include="Content\images\front3.png" />
     <Content Include="Content\images\gallery\fish-size.jpg" />
+    <Content Include="Content\images\gallery\image1.jpg" />
+    <Content Include="Content\images\gallery\image10.jpg" />
+    <Content Include="Content\images\gallery\image2.jpg" />
+    <Content Include="Content\images\gallery\image3.jpg" />
+    <Content Include="Content\images\gallery\image4.jpg" />
+    <Content Include="Content\images\gallery\image5.jpg" />
+    <Content Include="Content\images\gallery\image6.jpg" />
+    <Content Include="Content\images\gallery\image7.jpg" />
+    <Content Include="Content\images\gallery\image8.jpg" />
+    <Content Include="Content\images\gallery\image9.jpg" />
     <Content Include="Content\images\logo-white.png" />
     <Content Include="Content\images\gallery\nature.jpg" />
     <Content Include="Content\images\gallery\salmon-river-fish-hatchery.JPG" />
@@ -310,8 +328,10 @@
     <Content Include="Content\images\jo-photo.JPG" />
     <Content Include="Content\images\skiing.jpg" />
     <Content Include="Content\images\visa.png" />
+    <Content Include="Content\images\website-qr.jpg" />
     <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
+    <Content Include="Flyers\2016-07-28.html" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -491,6 +511,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="cachedimages\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

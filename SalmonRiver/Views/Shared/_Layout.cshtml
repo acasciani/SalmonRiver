@@ -41,14 +41,13 @@
 
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner" role="listbox">
-                        <div class="item active" style="background-image: url(/Content/images/front1.png?w=1800&format=jpg&quality=30); background-position-y: 25%;">
+                        <div class="item active" style="background-image: url(/Content/images/gallery/image10.JPG?autorotate=true&quality=80); background-position-y: 55%;">
                             <div class="carousel-caption bottom" style="display: none;">
-                                A brand new, state of the art facility with 4 bedrooms, 4 baths, a common room, a kitchen and walk out lake view.
                             </div>
                         </div>
-                        <div class="item" style="background-image: url(/Content/images/front2.png?w=2000&format=jpg&quality=30); background-position-y: 75%;">
+                        <div class="item" style="background-image: url(/Content/images/front1.png?w=1800&format=jpg&quality=30); background-position-y: 25%;">
                             <div class="carousel-caption bottom" style="display: none;">
-                                Named one of the top sportfishing destinations in the state of New York.
+                                A brand new, state of the art facility with 4 bedrooms, 4 baths, a common room, a kitchen and walk out lake view.
                             </div>
                         </div>
                         <div class="item" style="background-image: url(/Content/images/front3.png?w=2000&format=jpg&quality=40); background-position-y: 5%;">
@@ -142,5 +141,17 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
+    <script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-82877818-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
 </body>
 </html>
